@@ -22,6 +22,17 @@ define('APP_CHECK_URL', "https://oaooa.com/");//检测应用更新地址
 define('MOULD','mod');//路由模块键名
 define('DIVIDE','op');//路由操作键名
 
+if(!defined('DZZSCRIPT')) {
+    if(defined('CURSCRIPT')) {
+        define('DZZSCRIPT', CURSCRIPT.'.php');
+    } else {
+        define('DZZSCRIPT', basename($_SERVER['SCRIPT_NAME'] ?? 'index.php'));
+    }
+}
+if(!defined('BASESCRIPT')) {
+    define('BASESCRIPT', DZZSCRIPT);
+}
+
 define('DZZ_CORE_DEBUG', false);
 define('DZZ_TABLE_EXTENDABLE', false);
 global $_G,$_config;
@@ -82,5 +93,4 @@ require DZZ_ROOT.'core/function/function_misc.php';
 //}
 
 //C::creatapp();
-
 

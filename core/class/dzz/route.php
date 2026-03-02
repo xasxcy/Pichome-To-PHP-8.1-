@@ -77,7 +77,8 @@ class Route{
             define('MOD_PATH',CURSCRIPT.'/'.CURMODULE);
             define('MOD_NAME',CURMODULE);
             define('MOD_DIR',dirname($modfile));
-            define('MOD_URL',BASESCRIPT.'?mod='.$mod);
+            $baseScript = defined('BASESCRIPT') ? BASESCRIPT : (defined('CURSCRIPT') ? CURSCRIPT.'.php' : 'index.php');
+            define('MOD_URL',$baseScript.'?mod='.$mod);
             define('OP_NAME',$op);
            // $break = true;
 			Hook::listen('mod_run');
