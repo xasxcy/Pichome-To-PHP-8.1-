@@ -594,8 +594,18 @@ class dzz_app extends dzz_base{
         if(!$defaultlang){
             $defaultlang = C::t('setting')->fetch('defaultlang');
         }
+        if(!$defaultlang){
+            $defaultlang = 'zh-CN';
+        }
         if(!$moreLanguageState){
             $moreLanguageState = C::t('setting')->fetch('moreLanguageState');
+        }
+        if(empty($settinglanglist) || !is_array($settinglanglist)){
+            $settinglanglist = array(
+                $defaultlang => array(
+                    'langflag' => $defaultlang
+                )
+            );
         }
         setglobal('moreLanguageState',$moreLanguageState);
         setglobal('language_list',$settinglanglist);
@@ -603,14 +613,17 @@ class dzz_app extends dzz_base{
 
         //设置语言；
 		$langlist=$settinglanglist;
-		if($language=getcookie('language')){
-			
-		}else if($this->var['member']['language']){
-            $language=$this->var['member']['language'];
-        }
-		if(!isset($langlist[$language])){
-            $language=checkLanguage($langlist,$defaultlang);
-        }
+			if($language=getcookie('language')){
+				
+			}else if($this->var['member']['language']){
+	            $language=$this->var['member']['language'];
+	        }
+			if(!isset($langlist[$language])){
+	            $language=checkLanguage($langlist,$defaultlang);
+	        }
+	        if(!$language || !isset($langlist[$language])){
+	            $language = $defaultlang;
+	        }
         setglobal('language',$language);
         setglobal('username', getglobal('username', 'member'));
         setglobal('adminid', getglobal('adminid', 'member'));

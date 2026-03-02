@@ -962,12 +962,16 @@ function lang($langvar = null, $vars = array(), $default = null, $curpath = '')
 
     global $_G;
 
-    $checkLanguage = $_G['language'];
-    $defaultLanguage=$_G['defaultlang'];
+    $checkLanguage = !empty($_G['language']) ? $_G['language'] : '';
+    $defaultLanguage = !empty($_G['defaultlang']) ? $_G['defaultlang'] : 'zh-CN';
+    if(!$checkLanguage) {
+        $checkLanguage = $defaultLanguage;
+    }
     if ($curpath) {
         if (!isset($_G['lang']['template'])) {
             $_G['lang']['template'] = array();
         }
+        $lang = array();
         if (file_exists(DZZ_ROOT . './' . $curpath . '/language/' . $checkLanguage . '/' . 'lang.php')) {
             include DZZ_ROOT . './' . $curpath . '/language/' . $checkLanguage . '/' . 'lang.php';
         } elseif(file_exists(DZZ_ROOT . './' . $curpath . '/language/'.$defaultLanguage.'/' . 'lang.php')){
@@ -983,7 +987,7 @@ function lang($langvar = null, $vars = array(), $default = null, $curpath = '')
 
         }
 
-        $_G['lang']['template'] = array_merge( $_G['lang']['template'] ,$lang);
+        $_G['lang']['template'] = array_merge((array) $_G['lang']['template'], (array) $lang);
     } else {
         if (defined('CURSCRIPT')) {
             $key1 = CURSCRIPT . '_template';
@@ -994,36 +998,45 @@ function lang($langvar = null, $vars = array(), $default = null, $curpath = '')
 
         if (!isset($_G['lang']['template'])) {
             $_G['lang']['template'] = array();
+            $lang = array();
 
             if (file_exists(DZZ_ROOT . './core/language/' . $checkLanguage . '/' . 'lang.php')) {
                 include DZZ_ROOT . './core/language/' . $checkLanguage . '/' . 'lang.php';
-                $_G['lang']['template'] = $lang;
+                $_G['lang']['template'] = (array) $lang;
             } else {
-                include DZZ_ROOT . './core/language/'.$defaultLanguage.'/' . 'lang.php';
-                $_G['lang']['template'] = $lang;
+                if(file_exists(DZZ_ROOT . './core/language/'.$defaultLanguage.'/' . 'lang.php')){
+                    include DZZ_ROOT . './core/language/'.$defaultLanguage.'/' . 'lang.php';
+                }
+                $_G['lang']['template'] = (array) $lang;
             }
         }
 
         if (isset($key1) && !isset($_G['lang'][$key1])) {
+            $lang = array();
             if (file_exists(DZZ_ROOT . './' . CURSCRIPT . '/language/' . $checkLanguage . '/' . 'lang.php')) {
                 include DZZ_ROOT . './' . CURSCRIPT . '/language/' . $checkLanguage . '/' . 'lang.php';
-                $_G['lang']['template'] = array_merge($_G['lang']['template'], $lang);
+                $_G['lang']['template'] = array_merge((array) $_G['lang']['template'], (array) $lang);
 
             } else {
-                include DZZ_ROOT . './' . CURSCRIPT . '/language/'.$defaultLanguage.'/' . 'lang.php';
-                $_G['lang']['template'] = array_merge($_G['lang']['template'], $lang);
+                if(file_exists(DZZ_ROOT . './' . CURSCRIPT . '/language/'.$defaultLanguage.'/' . 'lang.php')){
+                    include DZZ_ROOT . './' . CURSCRIPT . '/language/'.$defaultLanguage.'/' . 'lang.php';
+                }
+                $_G['lang']['template'] = array_merge((array) $_G['lang']['template'], (array) $lang);
 
             }
         }
 
         if (isset($key2) && !isset($_G['lang'][$key2])) {
+            $lang = array();
             if (file_exists(DZZ_ROOT . './' . CURSCRIPT . '/' . CURMODULE . '/language/' . $checkLanguage . '/' . 'lang.php')) {
 
                 include DZZ_ROOT . './' . CURSCRIPT . '/' . CURMODULE . '/language/' . $checkLanguage . '/' . 'lang.php';
-                $_G['lang']['template'] = array_merge($_G['lang']['template'], $lang);
+                $_G['lang']['template'] = array_merge((array) $_G['lang']['template'], (array) $lang);
             } else {
-                include DZZ_ROOT . './' . CURSCRIPT . '/' . CURMODULE . '/language/'.$defaultLanguage.'/' . 'lang.php';
-                $_G['lang']['template'] = array_merge($_G['lang']['template'], $lang);
+                if(file_exists(DZZ_ROOT . './' . CURSCRIPT . '/' . CURMODULE . '/language/'.$defaultLanguage.'/' . 'lang.php')){
+                    include DZZ_ROOT . './' . CURSCRIPT . '/' . CURMODULE . '/language/'.$defaultLanguage.'/' . 'lang.php';
+                }
+                $_G['lang']['template'] = array_merge((array) $_G['lang']['template'], (array) $lang);
             }
         }
 

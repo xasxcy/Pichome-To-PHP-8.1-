@@ -149,7 +149,7 @@ class core
 
 	public static function handleException($exception) {
 		global $_config;
-		if($_config['debug']>0){
+		if(isset($_config['debug']) && $_config['debug'] > 0){
 			dzz_error::exception_error($exception);
 		}
 	}
