@@ -67,6 +67,20 @@
 - [ ] 上传、缩略图、预览、转码任务的业务正确性（需准备样本文件并做端到端比对）
 - [ ] Excel 导入导出业务正确性（需准备样本文件并做端到端比对）
 
+## 6. 本轮样本测试结果（2026-03-02）
+- [x] Excel 导出（仅导出）已验证：
+  - 执行脚本：`tests/php81_export_check.php`
+  - 输出文件：`tests/output/php81_export_test.xlsx`
+  - 结果：导出成功，文件非空（约 6KB）
+- [x] 图片/视频样本基础能力验证：
+  - 输入样本：`tests/IMG_7990.JPG`、`tests/IMG_7993.JPG`、`tests/IMG_7155.MOV`、`tests/IMG_7156.MOV`
+  - 输出结果：`tests/output/` 下已生成 `ffprobe` 信息、视频抽帧、3秒转码片段、图片缩略图
+  - 说明：该项验证的是运行环境与媒体处理能力（ffmpeg/ffprobe）可用
+
+### 说明：PHPExcel 在 PHP 8.1 的已知残留
+- 导出可成功执行，但会出现若干 `E_DEPRECATED`（函数签名顺序、Iterator 返回类型等）。
+- 这些告警不阻断导出结果；若要彻底清零，建议后续专项替换为 `PhpSpreadsheet`。
+
 ## 4. 我建议的落地顺序
 - [ ] 第 1 批：修核心阻断文件（`function_core.php`、`function_seccode.php`、`cache_file.php`、`admin/setting/*`）
 - [ ] 第 2 批：处理微信 SDK 两个文件的常量与函数签名
