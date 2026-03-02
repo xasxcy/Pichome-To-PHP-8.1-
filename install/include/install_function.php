@@ -1175,7 +1175,7 @@ function createmachinecode(){
     $onlineip = $_SERVER['REMOTE_ADDR'];
     $mcode = 'PH'.$chars[date('y')%60].$chars[date('n')].
         $chars[date('j')].$chars[date('G')].$chars[date('i')].
-        $chars[date('s')].substr(md5($onlineip.TIMESTAMP), 0, 4).random(4);
+        $chars[date('s')].substr(md5($onlineip.time()), 0, 4).random(4);
     return $mcode;
 }
 function upgradeinformation($sitename,$machinecode) {
@@ -1189,8 +1189,8 @@ function upgradeinformation($sitename,$machinecode) {
     $update[ 'version_level' ] = CORE_VERSION_LEVEL;
     $update[ 'release' ] = CORE_RELEASE;
     $update[ 'fixbug' ] = CORE_FIXBUG;
-    $update[ 'license_version' ] = LICENSE_VERSION;
-    $update[ 'license_limit' ] = LICENSE_LIMIT;
+    $update[ 'license_version' ] = defined('LICENSE_VERSION') ? LICENSE_VERSION : '';
+    $update[ 'license_limit' ] = defined('LICENSE_LIMIT') ? LICENSE_LIMIT : '';
     $data = '';
     foreach ( $update as $key => $value ) {
       $data .= $key . '=' . rawurlencode( $value ) . '&';

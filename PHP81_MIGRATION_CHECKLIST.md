@@ -6,6 +6,8 @@
 - [x] 去除安装器中的 PHP 版本上限检测（此前已改）
 - [x] 修复安装器 `get_magic_quotes_gpc()` 在 PHP 8.x 的兼容调用（此前已改）
 - [x] 修复安装阶段数据库连接在 PHP 8.1 下抛 `mysqli_sql_exception` 导致的 Fatal
+- [x] 修复安装阶段 `createmachinecode()` 使用未定义常量 `TIMESTAMP` 的 Fatal
+- [x] 修复安装上报信息使用未定义常量 `LICENSE_VERSION/LICENSE_LIMIT` 的 Fatal
 
 ## 1. 语法体检结果（PHP 8.1）
 - 扫描范围：排除 `vendor/` 的全部 PHP 文件
@@ -54,8 +56,16 @@
 - [ ] AI/外部模块（如 `aiXhimage`）按需验证（需完整安装后验证）
 
 ### 已安装态验证阻塞项
-- 当前机器存在 `mysql@8.4` 服务，但无可用数据库账号凭据（`root` 无密码不可登录）。
-- 需提供可用 MySQL 用户/密码后，才能完成“已安装态”链路回归（登录、后台、上传、转码、导入导出）。
+- 已解除：已使用 `root/1234` 完成安装态验证数据库（`pichome_php81_test`）。
+
+### 已安装态回归结果
+- [x] `db_init -> admin_init` 安装流程可完成，数据库与管理员用户写入成功
+- [x] 已安装态入口页可访问：`/index.php`、`/admin.php`、`/user.php`
+- [x] 后台/前台关键页可访问：`/admin/system/index.php`、`/admin/setting/index.php`、`/user/space/index.php`
+- [x] 若干接口可访问：`/misc.php?mod=syscache`、`/misc/getinfo.php`、`/misc/getthumb.php`、`/misc/ajax.php`
+- [x] 管理员与用户登录接口 POST 冒烟请求可达（HTTP 200，无 Fatal）
+- [ ] 上传、缩略图、预览、转码任务的业务正确性（需准备样本文件并做端到端比对）
+- [ ] Excel 导入导出业务正确性（需准备样本文件并做端到端比对）
 
 ## 4. 我建议的落地顺序
 - [ ] 第 1 批：修核心阻断文件（`function_core.php`、`function_seccode.php`、`cache_file.php`、`admin/setting/*`）
