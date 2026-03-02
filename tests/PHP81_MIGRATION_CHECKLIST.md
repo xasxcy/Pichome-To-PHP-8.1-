@@ -77,9 +77,9 @@
   - 输出结果：`tests/output/` 下已生成 `ffprobe` 信息、视频抽帧、3秒转码片段、图片缩略图
   - 说明：该项验证的是运行环境与媒体处理能力（ffmpeg/ffprobe）可用
 
-### 说明：PHPExcel 在 PHP 8.1 的已知残留
-- 导出可成功执行，但会出现若干 `E_DEPRECATED`（函数签名顺序、Iterator 返回类型等）。
-- 这些告警不阻断导出结果；若要彻底清零，建议后续专项替换为 `PhpSpreadsheet`。
+### 说明：PHPExcel 在 PHP 8.1 的状态
+- 导出路径中的已知 `E_DEPRECATED` 已在本轮补丁中清零（函数签名顺序、Iterator 返回类型）。
+- 中长期仍建议迁移 `PhpSpreadsheet`，降低维护成本。
 
 ## 7. 本轮新增修复（2026-03-02 第二轮）
 
@@ -116,16 +116,26 @@
 
 **修复规则**：在子类 `insert()` 末尾追加 `$replace = false, $silent = false` 等可选参数，使总参数数 ≥ 4（父类总参数数）。不修改方法体。
 
+### 7.4 PHPExcel 导出链路告警清零（2026-03-02 第三轮）
+- [x] `core/class/PHPExcel/Worksheet.php`
+  - `setConditionalStyles()`：将 `$pValue` 改为可选参数，消除 “可选参数在必选参数之前” 告警。
+- [x] `core/class/PHPExcel/Writer/Excel2007/Chart.php`
+  - `_writePlotSeriesValues()`：将 `$pSheet` 调整为可选参数，消除同类告警。
+- [x] `core/class/PHPExcel/WorksheetIterator.php`
+  - 为 `rewind/current/key/next/valid` 补齐 PHP 8 兼容返回类型，消除 `Iterator` 返回类型告警。
+- [x] 回归结果
+  - `tests/php81_export_check.php` 在 `error_reporting=E_ALL` 下无 Deprecated/Warning/Fatal，导出成功。
+
 ## 8. 最终验证结果（2026-03-02）
-- [x] 全量语法扫描：837 个 PHP 文件，FAIL=0
+- [x] 全量语法扫描：846 个 PHP 文件，FAIL=0
 - [x] HTTP 端点回归（29 个路径）：全部 200（两个 404 是预期的不存在路由）
 - [x] PHP 错误日志：完全清零（无任何 Fatal/Warning/Deprecated）
 - [x] 全部 POST 冒烟请求（admin/user 登录接口）：200，无 Fatal
 
 ## 9. 阶段结论（最终）
 - [x] PHP 8.1 迁移全部兼容性问题已修复并验证通过
-- [x] 当前版本可投入使用（保留 Excel 兼容层告警，不影响功能）
-- [ ] 后续可选优化：Excel 模块告警清零（推荐迁移 `PhpSpreadsheet`）
+- [x] 当前版本可投入使用（Excel 导出链路已无 PHP 8.1 Deprecated 告警）
+- [ ] 后续可选优化：Excel 模块整体替换为 `PhpSpreadsheet`
 
 ## 4. 我建议的落地顺序
 - [ ] 第 1 批：修核心阻断文件（`function_core.php`、`function_seccode.php`、`cache_file.php`、`admin/setting/*`）
