@@ -132,7 +132,7 @@
 
 		</el-autocomplete>
 	</template>
-	<!--{if PICHOME_LIENCE == 2}-->
+	<!--{if defined('PICHOME_LIENCE') && PICHOME_LIENCE == 2}-->
 	<el-dropdown v-if="(tabarr && tabarr.length) || (collectlisarr && collectlisarr.length)" @command="handleCollectCommand" style="margin-left: 12px;" max-height="300">
 		<el-button 
 			text 
@@ -211,7 +211,7 @@
 		version="$_G[setting][version]"
 		formhash="{FORMHASH}">
 		<el-avatar size="40">
-			{eval echo avatar_block($_G[uid]);}
+			{eval echo avatar_block($_G['uid']);}
 		</el-avatar>
 	</comavatar>
 	<el-dialog 

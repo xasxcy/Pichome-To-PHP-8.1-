@@ -8,7 +8,7 @@
 <script type="text/javascript" src="static/vue_components/ImageLayoutlimit/index.js?{VERHASH}"></script>
 <link rel="stylesheet" type="text/css" href="static/scss/layout.css?{VERHASH}"/>
 <script type="text/javascript" src="static/vue_components/HeaderSort/index.js?{VERHASH}"></script>
-<!--{if PICHOME_LIENCE == 2}-->
+<!--{if defined('PICHOME_LIENCE') && PICHOME_LIENCE == 2}-->
 <script type="text/javascript" src="static/vue_components/TabMessage/index.js?{VERHASH}"></script>
 <link rel="stylesheet" media="noexist" onload="this.media='all'" href="static/vue_components/TabMessage/index.css?{VERHASH}">
 <link rel="stylesheet" media="noexist" onload="this.media='all'" href="static/vue_components/TabExport/index.css?{VERHASH}">
@@ -348,7 +348,7 @@
 	dzzoffice.use(ImageLayoutlimit);
 	dzzoffice.use(DzzCollectdialog);
 	dzzoffice.use(DzzShareDialog);
-	<!--{if PICHOME_LIENCE == 2}-->
+	<!--{if defined('PICHOME_LIENCE') && PICHOME_LIENCE == 2}-->
 	dzzoffice.component('fulltext', fulltext);
 	dzzoffice.component('tab_message', tab_message);
 	dzzoffice.component('tabExport', tabExport);
