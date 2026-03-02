@@ -81,6 +81,11 @@
 - 导出可成功执行，但会出现若干 `E_DEPRECATED`（函数签名顺序、Iterator 返回类型等）。
 - 这些告警不阻断导出结果；若要彻底清零，建议后续专项替换为 `PhpSpreadsheet`。
 
+## 7. 阶段结论（当前可收尾）
+- [x] 除 Excel 相关告警外，PHP 8.1 迁移目标已完成并验证通过
+- [x] 当前版本可先投入使用（保留 Excel 兼容层告警）
+- [ ] 后续可选优化：Excel 模块告警清零（推荐迁移 `PhpSpreadsheet`）
+
 ## 4. 我建议的落地顺序
 - [ ] 第 1 批：修核心阻断文件（`function_core.php`、`function_seccode.php`、`cache_file.php`、`admin/setting/*`）
 - [ ] 第 2 批：处理微信 SDK 两个文件的常量与函数签名
