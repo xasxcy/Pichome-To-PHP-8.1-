@@ -81,9 +81,50 @@
 - 导出可成功执行，但会出现若干 `E_DEPRECATED`（函数签名顺序、Iterator 返回类型等）。
 - 这些告警不阻断导出结果；若要彻底清零，建议后续专项替换为 `PhpSpreadsheet`。
 
-## 7. 阶段结论（当前可收尾）
-- [x] 除 Excel 相关告警外，PHP 8.1 迁移目标已完成并验证通过
-- [x] 当前版本可先投入使用（保留 Excel 兼容层告警）
+## 7. 本轮新增修复（2026-03-02 第二轮）
+
+### 7.1 mysqli 弃用函数修复
+- [x] `core/class/db/db_driver_mysqli.php`：`error()`/`errno()` 从无参 `mysqli_error()` 改为 `$this->curlink->error`/`errno`
+
+### 7.2 可选参数在必选参数之前（PHP 8.1 Deprecated）
+修复 13 个文件（全部已完成）：
+- [x] `install/include/install_mysqli.php`、`install/include/install_mysql.php`
+- [x] `core/function/function_core.php`（`checkCopy()`）
+- [x] `core/class/io/io_dzz.php`（`upload_by_content`/`upload`/`watermark`）
+- [x] `core/class/io/io_ALIOSS.php`、`io_QCOS.php`（`getFolderInfo`）
+- [x] `core/class/dzz/Hook.php`、`route.php`（`&$break` 增加默认值）
+- [x] `core/class/dzz/dzz_upgrade_app.php`（3 个方法）
+- [x] `dzz/class/class_UploadHandler.php`（`handle_file_upload`）
+
+### 7.3 方法签名兼容性（PHP 8.0+ Fatal：子类总参数数必须 ≥ 父类总参数数）
+
+**第一轮**（14 个文件，修复 `insert`/`update`/`delete`/`fetch`）：
+`table_syscache`、`table_admincp_session`、`table_app_market`、`table_app_organization`、
+`table_app_pic`、`table_form_setting`、`table_form_setting_filedcat`、`table_local_router`、
+`table_organization_admin`、`table_organization_guser`、`table_pichome_collectlist`、
+`table_session`、`table_setting`、`table_thumb_cache`、`table_thumb_record`、
+`table_user`、`table_user_profile`、`table_user_setting`、`table_usergroup`
+
+**第二轮**（21 个文件，修复 `insert` 总参数数 < 4 的情况）：
+`table_ffmpegimage_cache`、`table_organization`、`table_pichome_comments`、
+`table_pichome_folder_tag`、`table_pichome_folderresources`、`table_pichome_foldertag`、
+`table_pichome_resources_attr`、`table_pichome_resources_relation`、`table_pichome_resources_tag`、
+`table_pichome_resources`、`table_pichome_resourcestab`、`table_pichome_resourcestag`、
+`table_pichome_taggroup`、`table_pichome_tagrelation`、`table_pichome_vapp_tag`、
+`table_pichome_ffmpeg_record`、`table_pichome_imagickrecord`、`table_pichome_onlyofficethumb`、
+`table_pichome_tag`、`table_attachment`、`dzz/local/class/table/table_local_record`
+
+**修复规则**：在子类 `insert()` 末尾追加 `$replace = false, $silent = false` 等可选参数，使总参数数 ≥ 4（父类总参数数）。不修改方法体。
+
+## 8. 最终验证结果（2026-03-02）
+- [x] 全量语法扫描：837 个 PHP 文件，FAIL=0
+- [x] HTTP 端点回归（29 个路径）：全部 200（两个 404 是预期的不存在路由）
+- [x] PHP 错误日志：完全清零（无任何 Fatal/Warning/Deprecated）
+- [x] 全部 POST 冒烟请求（admin/user 登录接口）：200，无 Fatal
+
+## 9. 阶段结论（最终）
+- [x] PHP 8.1 迁移全部兼容性问题已修复并验证通过
+- [x] 当前版本可投入使用（保留 Excel 兼容层告警，不影响功能）
 - [ ] 后续可选优化：Excel 模块告警清零（推荐迁移 `PhpSpreadsheet`）
 
 ## 4. 我建议的落地顺序

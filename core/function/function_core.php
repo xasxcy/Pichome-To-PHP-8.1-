@@ -2910,7 +2910,7 @@ function getTxtAttachByMd5($message, $filename_title, $ext)
 }
 
 
-function checkCopy($icoid = 0, $sourcetype = '', $iscut = 0, $obz, $tbz)
+function checkCopy($icoid, $sourcetype, $iscut, $obz, $tbz)
 {
     global $_G;
     $copy = 1;
