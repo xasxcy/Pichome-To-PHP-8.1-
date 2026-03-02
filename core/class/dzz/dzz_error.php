@@ -273,9 +273,9 @@ EOT;
 </body>
 </html>
 EOT;
-		$exit && exit();
+			exit();
 
-	}
+		}
 
 	public static function mobile_show_error($type, $errormsg, $phpmsg) {
 		global $_G;

@@ -387,7 +387,7 @@ class dzz_app extends dzz_base{
         if($this->config['output']['forceheader']) {
             @header('Content-Type: text/html; charset='.CHARSET);
         }
-		if($this->config['localurl']){
+		if(!empty($this->config['localurl'])){
 			 setglobal('localurl', $this->config['localurl']);
 		}
 
@@ -534,8 +534,8 @@ class dzz_app extends dzz_base{
             }
 
             if(!empty($user) && $user['password'] == $dzz_pw && ($user['status']<1 || $user['uid']==1)) {//加上判断用户是否被停用
-
-                if($this->check_session($user)==3){
+                $cpaccess = $this->check_session($user);
+                if($cpaccess==3){
                     $this->var['member'] = $user;
                 }else{
                     $user = array();
@@ -551,7 +551,7 @@ class dzz_app extends dzz_base{
         }
         setglobal('groupid', getglobal('groupid', 'member'));
         !empty($this->cachelist) && loadcache($this->cachelist);
-        if($this->var['member'] && $this->var['group']['radminid'] == 0 && $this->var['member']['adminid'] > 0 && $this->var['member']['groupid'] != $this->var['member']['adminid'] && !empty($this->var['cache']['admingroup_'.$this->var['member']['adminid']])) {
+        if(!empty($this->var['member']) && !empty($this->var['group']) && isset($this->var['group']['radminid']) && $this->var['group']['radminid'] == 0 && $this->var['member']['adminid'] > 0 && $this->var['member']['groupid'] != $this->var['member']['adminid'] && !empty($this->var['cache']['admingroup_'.$this->var['member']['adminid']])) {
             $this->var['group'] = array_merge($this->var['group'], $this->var['cache']['admingroup_'.$this->var['member']['adminid']]);
         }
 
@@ -615,7 +615,7 @@ class dzz_app extends dzz_base{
 		$langlist=$settinglanglist;
 			if($language=getcookie('language')){
 				
-			}else if($this->var['member']['language']){
+			}else if(!empty($this->var['member']['language'])){
 	            $language=$this->var['member']['language'];
 	        }
 			if(!isset($langlist[$language])){
@@ -717,6 +717,12 @@ class dzz_app extends dzz_base{
         !empty($this->cachelist) && loadcache($this->cachelist);
         if(!is_array($this->var['setting'])) {
             $this->var['setting'] =C::t('setting')->fetch_all();
+        }
+        if(!isset($this->var['setting']['disallowfloat'])) {
+            $this->var['setting']['disallowfloat'] = '';
+        }
+        if(!isset($this->var['setting']['ipaccess'])) {
+            $this->var['setting']['ipaccess'] = '';
         }
         if($ismobile=helper_browser::ismobile()) define('IN_MOBILE',$ismobile);
         define('VERHASH',isset($this->var['setting']['verhash'])?$this->var['setting']['verhash']:random(3));

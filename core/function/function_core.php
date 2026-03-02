@@ -937,7 +937,7 @@ function checkLanguage($langList=array(),$defaultlang='')
     if(empty($langList)) $langList = $_G['language_list'];
     if(empty($defaultlang)) $defaultlang = $_G['defaultlang'];
     $langSet = '';
-    if ($_G['cookie']['language']) $langSet = $_G['cookie']['language'];
+    if (!empty($_G['cookie']['language'])) $langSet = $_G['cookie']['language'];
     else {
         if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {// 自动侦测浏览器语言
             preg_match('/^([a-z\d\-]+)/i', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $matches);
@@ -1787,7 +1787,7 @@ function ipbanned($onlineip)
 {
     global $_G;
 
-    if ($_G['setting']['ipaccess'] && !ipaccess($onlineip, $_G['setting']['ipaccess'])) {
+    if (!empty($_G['setting']['ipaccess']) && !ipaccess($onlineip, $_G['setting']['ipaccess'])) {
         return TRUE;
     }
 

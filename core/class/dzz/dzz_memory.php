@@ -37,19 +37,19 @@ class dzz_memory extends dzz_base
 				$this->memory = null;
 			}
 		}
-		if(!$this->memory->enable && $this->extension['memcached'] && !empty($config['memcached']['server'])) {
-			$this->memory = new memory_driver_memcached();
-			$this->memory->init($this->config['memcached']);
-			if(!$this->memory->enable) {
-				$this->memory = null;
+			if((!is_object($this->memory) || !$this->memory->enable) && $this->extension['memcached'] && !empty($config['memcached']['server'])) {
+				$this->memory = new memory_driver_memcached();
+				$this->memory->init($this->config['memcached']);
+				if(!$this->memory->enable) {
+					$this->memory = null;
+				}
 			}
-		}
-		if(!$this->memory->enable && $this->extension['memcache'] && !empty($config['memcache']['server'])) {
-			$this->memory = new memory_driver_memcache();
-			$this->memory->init($this->config['memcache']);
-			if(!$this->memory->enable) {
-				$this->memory = null;
-			}
+			if((!is_object($this->memory) || !$this->memory->enable) && $this->extension['memcache'] && !empty($config['memcache']['server'])) {
+				$this->memory = new memory_driver_memcache();
+				$this->memory->init($this->config['memcache']);
+				if(!$this->memory->enable) {
+					$this->memory = null;
+				}
 		}
 
 		foreach(array('apc', 'eaccelerator', 'xcache', 'wincache') as $cache) {
