@@ -1,4 +1,8 @@
 <?php
+if (!defined('IN_OAOOA')) {
+    exit('Access Denied');
+}
+
 //查询符合执行条件的数据
 $datas = DB::fetch_all("SELECT * FROM %t where width=0 and ext=%s", array('pichome_resources','mp4'));
 print_r($datas);die;

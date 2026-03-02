@@ -126,9 +126,21 @@
 - [x] 回归结果
   - `tests/php81_export_check.php` 在 `error_reporting=E_ALL` 下无 Deprecated/Warning/Fatal，导出成功。
 
+### 7.5 懒加载路径回归与入口保护修复（2026-03-02 第四轮）
+- [x] 新增懒加载路径回归（HTTP）：
+  - 覆盖 44 个 GET/POST 路径（前台、后台、`misc`、`mod/op` 组合、登录接口）。
+  - 在 PHP 8.1 `E_ALL` 下对响应体扫描 `Fatal/Parse/Uncaught/Deprecated/Warning`。
+- [x] 发现并修复 1 个真实运行时问题：
+  - `misc/getConvertStatus.php` 直接访问时触发 `Class "DB" not found`。
+  - 修复：补充 `IN_OAOOA` 入口保护，统一与其他 `misc` 脚本行为（未初始化时直接拒绝访问）。
+- [x] 同类风险一并修复：
+  - `misc/repairvideo.php` 补充 `IN_OAOOA` 入口保护。
+- [x] 修复后回归：
+  - 44/44 路径全部通过扫描（ERR=0）。
+
 ## 8. 最终验证结果（2026-03-02）
 - [x] 全量语法扫描：846 个 PHP 文件，FAIL=0
-- [x] HTTP 端点回归（29 个路径）：全部 200（两个 404 是预期的不存在路由）
+- [x] HTTP 端点回归（44 个路径）：全部 200，响应体扫描无 Fatal/Warning/Deprecated/Parse/Uncaught
 - [x] PHP 错误日志：完全清零（无任何 Fatal/Warning/Deprecated）
 - [x] 全部 POST 冒烟请求（admin/user 登录接口）：200，无 Fatal
 

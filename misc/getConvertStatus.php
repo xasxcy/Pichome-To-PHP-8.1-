@@ -1,5 +1,8 @@
 <?php
     ignore_user_abort(true);
+    if (!defined('IN_OAOOA')) {
+        exit('Access Denied');
+    }
     @set_time_limit(0);
     global $_G;
     $start = 0;
