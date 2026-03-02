@@ -42,7 +42,7 @@ if ($do == 'gettagdata') {//获取标签位文件列表数据
     }
     $collectlisarr = json_encode($collectlisarr);
     $tabarr = json_encode($tabarr);
-    $PICHOME_LIENCE = PICHOME_LIENCE;
+    $PICHOME_LIENCE = defined('PICHOME_LIENCE') ? PICHOME_LIENCE : '';
     if($ismobile){
         include template('fashion/mobile/page/index');
     }else{
