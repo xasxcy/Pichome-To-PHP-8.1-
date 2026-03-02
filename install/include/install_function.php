@@ -63,6 +63,8 @@ function check_db($dbhost, $dbuser, $dbpw, $dbname, $tablepre) {
 	}
 	$mysqlmode = function_exists('mysqli_connect') ? 'mysqli' : 'mysql';
 	if($mysqlmode=='mysqli'){
+		$port = '3306';
+		$unix_socket = null;
 		//兼容支持域名直接带有端口的情况
 		if(strpos($dbhost,':')!==false){
 			list($dbhost,$port)=explode(':',$dbhost);
@@ -72,10 +74,15 @@ function check_db($dbhost, $dbuser, $dbpw, $dbname, $tablepre) {
 			$dbhost='localhost';
 		}
 		if(empty($port)) $port='3306';
-		
-		$link =  new mysqli($dbhost, $dbuser, $dbpw, '', $port, $unix_socket);
-		$errno =  $link->connect_errno;
-		$error =  $link->connect_error;
+		try {
+			$link =  new mysqli($dbhost, $dbuser, $dbpw, '', $port, $unix_socket);
+			$errno =  $link->connect_errno;
+			$error =  $link->connect_error;
+		} catch (Throwable $e) {
+			$errno = method_exists($e, 'getCode') ? intval($e->getCode()) : 0;
+			$error = $e->getMessage();
+			$link = null;
+		}
 	}else{
             
 		$link = @mysql_connect($dbhost, $dbuser, $dbpw);

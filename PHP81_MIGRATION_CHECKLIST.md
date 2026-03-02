@@ -5,6 +5,7 @@
 - [x] 使用 PHP 8.1 CLI 验证：`/opt/homebrew/opt/php@8.1/bin/php -v`（8.1.34）
 - [x] 去除安装器中的 PHP 版本上限检测（此前已改）
 - [x] 修复安装器 `get_magic_quotes_gpc()` 在 PHP 8.x 的兼容调用（此前已改）
+- [x] 修复安装阶段数据库连接在 PHP 8.1 下抛 `mysqli_sql_exception` 导致的 Fatal
 
 ## 1. 语法体检结果（PHP 8.1）
 - 扫描范围：排除 `vendor/` 的全部 PHP 文件
@@ -43,12 +44,14 @@
 - [ ] 微信相关 SDK（`class_Wechat.php`、`class_qyWechat.php`）做专项升级或补丁
 
 ## 3. 运行时验证清单（修复语法后执行）
-- [ ] 首页、登录、后台首页可访问
-- [ ] 上传、缩略图、预览、转码任务可执行
-- [ ] 定时任务（cron）可触发且无 fatal
-- [ ] 管理后台设置页可打开并保存
-- [ ] 导入/导出（尤其 Excel）可用
-- [ ] AI/外部模块（如 `aiXhimage`）按需验证
+- [x] 未安装态：首页/用户端/后台入口可访问并正确跳转安装页（HTTP 302）
+- [x] 安装页步骤 `env_check` / `dir_check` / `db_init` / `admin_init` 可访问（HTTP 200）
+- [x] `db_init` 提交错误数据库凭据时返回友好错误页，不再 Fatal
+- [ ] 上传、缩略图、预览、转码任务可执行（需完整安装后验证）
+- [ ] 定时任务（cron）可触发且无 fatal（需完整安装后验证）
+- [ ] 管理后台设置页可打开并保存（需完整安装后验证）
+- [ ] 导入/导出（尤其 Excel）可用（需完整安装后验证）
+- [ ] AI/外部模块（如 `aiXhimage`）按需验证（需完整安装后验证）
 
 ## 4. 我建议的落地顺序
 - [ ] 第 1 批：修核心阻断文件（`function_core.php`、`function_seccode.php`、`cache_file.php`、`admin/setting/*`）
