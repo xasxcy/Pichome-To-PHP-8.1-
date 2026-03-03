@@ -67,7 +67,7 @@
 				DocumentBack:true,
 				DocumentRefresh:1,
 				DocumentHref:'',
-				DocumentAdminId:'$_G[adminid]',
+				DocumentAdminId:"$_G['adminid']",
 				HideInformation: false,
 				IsFullScreen:false,
 				imagesData: {},
@@ -475,9 +475,11 @@
 		},
 
 	});
-	dzzoffice_details.use(ElementPlus, {
-		locale: {$_G['language_list'][$_G['language']]['elementflagCamel']},
-	});
+		dzzoffice_details.use(ElementPlus, {
+			<!--{if $_G['language']=='zh-CN' && !empty($_G['language_list'][$_G['language']]['elementflagCamel'])}-->
+			locale: {$_G['language_list'][$_G['language']]['elementflagCamel']},
+			<!--{/if}-->
+		});
 	for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 		dzzoffice_details.component(key, component)
 	}

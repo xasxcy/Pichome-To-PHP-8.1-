@@ -18,16 +18,12 @@
 	</template>
 	<template v-else>
 		<div class="el-carousel" style="position: relative;flex: 1;overflow: hidden;">
-			<el-scrollbar class="page-component__scroll" id="ImgScroll" ref="scrollImg" @mousedown.native="imageDrag">
-				<img
-					:src="imagesData.icondata"
-					class="image-viewer__img thumbnail" />
-				<img
-					@load="imageload"
-					:src="imagesData.originalimg?imagesData.originalimg:imagesData.icondata"
-					class="image-viewer__img max opacity" />
-				
-			</el-scrollbar>
+				<el-scrollbar class="page-component__scroll" id="ImgScroll" ref="scrollImg" @mousedown.native="imageDrag">
+					<img
+						@load="imageload"
+						:src="imagesData.originalimg?imagesData.originalimg:imagesData.icondata"
+						class="image-viewer__img max" />
+				</el-scrollbar>
 			<template v-if="previews.data.length">
 				<el-button 
 					v-if="previews.active > 0"
@@ -91,7 +87,10 @@
 				// 	return false;
 				// }
 				var ImgScroll = document.getElementById('ImgScroll');
-				var img = document.querySelector('.image-viewer__img');
+					var img = document.querySelector('.image-viewer__img.max');
+					if(!img || !ImgScroll){
+						return;
+					}
 				var wrap = document.querySelector('#ImgScroll .el-scrollbar__wrap');
 				var canva = document.querySelector('#ImgScroll .el-scrollbar__view');
 				if(this.imagesData.opentype == 'other'){
@@ -154,13 +153,16 @@
 				if(self.ImgParam.scaleY != 0){
 					str += ' scaleY('+self.ImgParam.scaleY+')';
 				}
-				document.querySelector('.image-viewer__img').style.transform = str;
+					var img = document.querySelector('.image-viewer__img.max');
+					if(img){
+						img.style.transform = str;
+					}
 			},
 			imageDrag(e){//图片移动
 				var self = this;
 				e.preventDefault();
 				var oDiv = document.getElementById('ImgScroll');
-				var oImg = document.querySelector('.image-viewer__img');
+					var oImg = document.querySelector('.image-viewer__img.max');
 				var wrap = oDiv.querySelector('.el-scrollbar__wrap');
 				e = e ? e : window.event;
 				oDiv.classList.add = 'activemove';
@@ -191,14 +193,7 @@
 				
 			},
 			imageload(){
-				document.querySelector('.image-viewer__img.thumbnail').remove();
-				document.querySelector('.image-viewer__img.max').classList.remove('opacity');
-
-
-				// let img = document.querySelector('.image-viewer__img.max');
-				// if(img){
-				// 	img.classList.remove('opacity');
-				// }
+					return true;
 			},
 			async getImageSizeByUrl(callback){
 				let image = new Image();
