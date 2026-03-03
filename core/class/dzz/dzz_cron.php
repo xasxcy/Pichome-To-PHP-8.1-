@@ -93,7 +93,12 @@ class dzz_cron
 			$cron['hour'] = $nexttime['hour'];
 			$cron['minute'] = $nexttime['minute'];
 		}
-		$nextrun = @gmmktime($cron['hour'], $cron['minute'] > 0 ? $cron['minute'] : 0, 0, $monthnow, $cron['day'], $yearnow) - getglobal('setting/timeoffset') * 3600;
+		$cronHour = intval($cron['hour']);
+		$cronMinute = intval($cron['minute']);
+		$cronDay = intval($cron['day']);
+		$monthNowInt = intval($monthnow);
+		$yearNowInt = intval($yearnow);
+		$nextrun = @gmmktime($cronHour, $cronMinute > 0 ? $cronMinute : 0, 0, $monthNowInt, $cronDay, $yearNowInt) - getglobal('setting/timeoffset') * 3600;
 		$data = array('lastrun' => TIMESTAMP, 'nextrun' => $nextrun);
 		if(!($nextrun > TIMESTAMP)) {
 			$data['available'] = '0';

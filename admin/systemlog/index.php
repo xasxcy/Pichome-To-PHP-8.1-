@@ -3,18 +3,19 @@
 if(!defined('IN_OAOOA')) {
 	exit('Access Denied');
 } 
-define('NOROBOT', TRUE);
+if(!defined('NOROBOT')) define('NOROBOT', TRUE);
 $returntype =  isset($_GET['returnType']) ?  $_GET['returnType']: 'json';//返回值方式
-$type=$_GET['type'];
+$type = isset($_GET['type']) ? $_GET['type'] : '';
+$ismobile = helper_browser::ismobile();
 if(!in_array($type, array('list'))) {
 	$type='list';
 } 
 
 $checkLanguage = $_G['language']; 
-if(file_exists (DZZ_ROOT.'./admin/language/'.$checkLanguage.'/'.'lang.php')){							
-	include DZZ_ROOT.'./admin/language/'.$checkLanguage.'/'.'lang.php';	
-	$_G['lang']['template']=array_merge($_G['lang']['template'],$checkLanguage);
-}
+	if(file_exists (DZZ_ROOT.'./admin/language/'.$checkLanguage.'/'.'lang.php')){							
+		include DZZ_ROOT.'./admin/language/'.$checkLanguage.'/'.'lang.php';	
+		$_G['lang']['template'] = array_merge($_G['lang']['template'], array($checkLanguage));
+	}
  
 if($type=="list"){
 	//Hook::listen('adminlogin'); 
@@ -30,7 +31,7 @@ if($type=="list"){
        $systemlog_setting[$k] = $v;
     }
 	$operationarr = array_keys($systemlog_setting);  
-	$operation = in_array($_GET['operation'], $operationarr) ? $_GET['operation'] : "cplog"; 
+	$operation = isset($_GET['operation']) && in_array($_GET['operation'], $operationarr) ? $_GET['operation'] : "cplog"; 
 	$navtitle=$systemlog_setting[$operation]["title"].' - '.lang('appname');//lang('nav_logs_'.$operation).' - '.lang('admin_navtitle');
 	$logdir = DZZ_ROOT.'./data/log/';
 	$logfiles = get_log_files($logdir, $operation);

@@ -8,7 +8,7 @@ Hook::listen('check_login');
 global $_G;
 $uid = $_G['uid'];
 $ismobile = helper_browser::ismobile();
-$do=htmlspecialchars($_GET['do']);
+$do = htmlspecialchars(isset($_GET['do']) ? $_GET['do'] : '');
 if($do=='getNavigation'){
     $navlist=array();
     if (!$ismobile) {

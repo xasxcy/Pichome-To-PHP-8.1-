@@ -48,7 +48,7 @@
 				<template v-if="item.type == 'user'">
 					<div class="tab-item" @click="MyPopupVisible=true">
 						<div id="dzz_avatar_img">
-							{eval echo avatar_block($_G[uid]);}
+							{eval echo avatar_block($_G["uid"]);}
 							<!--{if intval($_G[pichomelevel]) == 1}-->
 								<van-image
 									class="garde-image"

@@ -21,7 +21,7 @@ class Encode_Core {
 	/**
 	* 文件分析方法来检查UNICODE文件，ANSI文件没有文件头，此处不分析
 	*/
-	private function detect_utf_encoding($text) {
+	private static function detect_utf_encoding($text) {
 		$first2 = substr($text, 0, 2);
 		$first3 = substr($text, 0, 3);
 		$first4 = substr($text, 0, 3);

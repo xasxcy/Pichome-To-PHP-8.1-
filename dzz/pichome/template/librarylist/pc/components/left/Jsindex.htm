@@ -68,7 +68,7 @@
 			var self = this;
 			
 			<!--{if $_GET['do'] == 'tags' ||  $_GET['do'] == 'member'}-->
-			this.LeftCurrenType = '$_GET[do]';
+				this.LeftCurrenType = "{$_GET['do']}";
 			<!--{else}-->
 			var type = this.CommonGetHashParam('type',1);
 			var fid = this.CommonGetHashParam('fid',1);

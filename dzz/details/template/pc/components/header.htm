@@ -11,7 +11,7 @@
 				<el-image src="data/attachment/sitelogo/sitelogo.png?{VERHASH}" fit="contain">
 					<template #error><div class="el-image__placeholder"></div></template>
 				</el-image>
-				<span class="text">$_G['setting'][sitename]</span>
+				<span class="text">$_G</span>
 			</a>
 			<!--{/if}-->
 		</div>
@@ -127,7 +127,7 @@
 					version="$_G[setting][version]"
 					formhash="{FORMHASH}">
 					<el-avatar size="40">
-						{eval echo avatar_block($_G[uid]);}
+						{eval echo avatar_block($_G["uid"]);}
 					</el-avatar>
 				</comavatar>
 			<!--{/if}-->

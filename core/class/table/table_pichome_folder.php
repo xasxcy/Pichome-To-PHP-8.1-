@@ -212,7 +212,7 @@ class table_pichome_folder extends dzz_table
         if($fname = DB::result_first("select count(fid) from %t where fid = %s and appid = %s",array($this->_table,$setarr['fid'],$setarr['appid']))){
             unset($setarr['fid']);
             if(parent::update($fid,$setarr)){
-                $hookdata = ['appid'=>$setarr['appid'],'fids'=>[$setarr['fid']]];
+                $hookdata = ['appid'=>$setarr['appid'],'fids'=>[$fid]];
                 Hook::listen('updatedataafter',$hookdata);
             }
         }else{

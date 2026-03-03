@@ -154,8 +154,8 @@
 			},
 		},
 		created(){
-			<!--{if intval($_G[setting][pathinfo])}-->
-			let param = '{$_GET[hashparams]}';
+			<!--{if intval($_G['setting']['pathinfo'])}-->
+			let param = "{eval echo isset($_GET['hashparams']) ? $_GET['hashparams'] : '';}";
 			if(param){
 				param = JSON.parse(param)
 				this.DocumentAppid = param.appid;

@@ -28,7 +28,7 @@ if($operation == 'signlepageset'){
 	
 	
     $defaulttheme = C::t('setting')->fetch('pichometheme');
-    $themelist = $_G['setting']['pichomethemedata'];
+    $themelist = isset($_G['setting']['pichomethemedata']) && is_array($_G['setting']['pichomethemedata']) ? $_G['setting']['pichomethemedata'] : array();
     include template('admin/pc/page/theme');
 }
 

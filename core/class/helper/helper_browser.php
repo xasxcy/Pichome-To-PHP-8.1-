@@ -14,7 +14,7 @@ class helper_browser
         // check for most popular browsers first
         // unfortunately, that's IE. We also ignore Opera and Netscape 8
         // because they sometimes send msie agent
-        $useragent = $useragent ? $useragent : $_SERVER['HTTP_USER_AGENT'];
+        $useragent = $useragent ? $useragent : (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '');
         if (strpos($useragent, 'MSIE') !== FALSE && strpos($useragent, 'Opera') === FALSE && strpos($useragent, 'Netscape') === FALSE) {
             //deal with Blazer
             if (preg_match("/Blazer\/([0-9]{1}\.[0-9]{1}(\.[0-9])?)/", $useragent, $matches)) {
@@ -100,7 +100,8 @@ class helper_browser
     //判断是否为企业微信
     static function is_wxwork()
     {
-        if (strpos($_SERVER['HTTP_USER_AGENT'], 'wxwork') !== false) {
+        $agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+        if (strpos($agent, 'wxwork') !== false) {
             return true;
         } else {
             return false;
@@ -109,7 +110,7 @@ class helper_browser
 
     static function ismobile()
     {
-        $agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+        $agent = strtolower(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '');
         if (preg_match("/WindowsWechat/i", $agent)) {
             return false;//return 'WindowsWechat';pc微信客户端打开pc版
         }
@@ -136,7 +137,7 @@ class helper_browser
 
     static function getplatform()
     {
-        $agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+        $agent = strtolower(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '');
         $os = array();;
 
         if (preg_match("/win/i", $agent) && preg_match('/nt 5.1/', $agent)) {

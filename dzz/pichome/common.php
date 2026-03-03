@@ -6,8 +6,18 @@ global $_G;
 
 $themeid = isset($_G['setting']['pichometheme']) ? intval($_G['setting']['pichometheme']):1;
 $pagename = isset($_GET['pagename']) ? trim($_GET['pagename']):'';
-$themedata = $_G['setting']['pichomethemedata'][$themeid];
-$singletpltagdata = unserialize($themedata['themetag']);
+$allThemeData = isset($_G['setting']['pichomethemedata']) && is_array($_G['setting']['pichomethemedata']) ? $_G['setting']['pichomethemedata'] : array();
+$themedata = isset($allThemeData[$themeid]) && is_array($allThemeData[$themeid]) ? $allThemeData[$themeid] : array();
+if (!$themedata && $allThemeData) {
+    $fallbackTheme = reset($allThemeData);
+    if (is_array($fallbackTheme)) {
+        $themedata = $fallbackTheme;
+    }
+}
+$themebanner = isset($themedata['themebanner']) ? intval($themedata['themebanner']) : 0;
+$themefolder = !empty($themedata['themefolder']) ? $themedata['themefolder'] : 'dzz/banner/template/fashion';
+$singletpltagdata = isset($themedata['themetag']) ? dunserialize($themedata['themetag']) : array();
+$singletpltagdata = is_array($singletpltagdata) ? $singletpltagdata : array();
 if(isset($singletpltagdata[$pagename])){
     $setdata =  $singletpltagdata[$pagename];
     $setkey = array_keys($setdata);
@@ -22,7 +32,7 @@ if(isset($singletpltagdata[$pagename])){
 //栏目
     $bannerdatas = [];
     foreach(DB::fetch_all("select * from %t where isshow = 1 and themeid=%d and (settype = %d or btype = 0) order by disp ",
-        array('pichome_banner',$themeid,$themedata['themebanner'])) as $v){
+        array('pichome_banner',$themeid,$themebanner)) as $v){
         $viewperm = unserialize($v['views']);
         if (!C::t('pichome_banner')->getpermbypermdata($viewperm)) {
             continue;
@@ -67,4 +77,4 @@ if(isset($singletpltagdata[$pagename])){
     $defaultLeftData = json_encode($bannerdatas);
 
 
-include template($themedata['themefolder'].'/pc/page/'.$pagename);
+include template($themefolder.'/pc/page/'.$pagename);

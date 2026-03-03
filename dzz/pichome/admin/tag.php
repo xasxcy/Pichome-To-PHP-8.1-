@@ -84,9 +84,11 @@ if($operation == 'tagset'){
 function gettpltagdata($themeid,$pagename){
     global $_G;
     $setdata =[];
-    $themedata = $_G['setting']['pichomethemedata'][$themeid];
-    $singletpltagdata = unserialize($themedata['themetag']);
-    $setdata =  $singletpltagdata[$pagename];
+    $allThemeData = isset($_G['setting']['pichomethemedata']) && is_array($_G['setting']['pichomethemedata']) ? $_G['setting']['pichomethemedata'] : array();
+    $themedata = isset($allThemeData[$themeid]) && is_array($allThemeData[$themeid]) ? $allThemeData[$themeid] : array();
+    $singletpltagdata = isset($themedata['themetag']) ? dunserialize($themedata['themetag']) : array();
+    $singletpltagdata = is_array($singletpltagdata) ? $singletpltagdata : array();
+    $setdata = isset($singletpltagdata[$pagename]) && is_array($singletpltagdata[$pagename]) ? $singletpltagdata[$pagename] : array();
     return $setdata;
 }
 
@@ -121,7 +123,9 @@ function getrecommenddata($conditiondata,$themeid){
     foreach ($conditiondata as $k=>$v){
         //如果未指定栏目，视为所有栏目数据
         if($v['bannermultiple'] == 'false'){
-            $settype = $_G['setting']['pichomethemedata'][$themeid]['themebanner'];
+            $allThemeData = isset($_G['setting']['pichomethemedata']) && is_array($_G['setting']['pichomethemedata']) ? $_G['setting']['pichomethemedata'] : array();
+            $themedata = isset($allThemeData[$themeid]) && is_array($allThemeData[$themeid]) ? $allThemeData[$themeid] : array();
+            $settype = isset($themedata['themebanner']) ? intval($themedata['themebanner']) : 0;
             //查询所有内容栏目
             $bannerdata =  C::t('pichome_banner')->fetch_contentbanner_by_themeid($themeid,$settype);
         }else{

@@ -87,7 +87,7 @@
 					@handlepreference="handlepreference"
 					@clearkeyword="clearkeyword"
 					:keyword="headerkeyword"
-					issearchimage="{$_G['setting']['imageSearch_setting']['status']}"
+					issearchimage="{eval echo !empty($_G['setting']['imageSearch_setting']['status']) ? 1 : 0;}"
 					:headeralldata="headeralldata"
 					:searchdata="searchdata"></theme-default>
 			<!-- </el-scrollbar> -->
@@ -113,8 +113,8 @@
 				headeralldata:{
 					data:[],
 					message:{
-						sitebeiantxt:'{$_G[setting][sitebeiantxt]}',
-						sitebeian:'{$_G[setting][sitebeian]}',
+						sitebeiantxt:'{eval echo isset($_G['setting']['sitebeiantxt']) ? $_G['setting']['sitebeiantxt'] : "";}',
+						sitebeian:'{eval echo isset($_G['setting']['sitebeian']) ? $_G['setting']['sitebeian'] : "";}',
 					}
 				},
 				tilebanner:[]
@@ -197,7 +197,7 @@
 				let reg1 = new RegExp(SITEURL.replace('[','\\[').replace(']','\\]'),"g");
 				let active = href.replace(reg1,"");
 				if(active){
-					<!--{if intval($_G[setting][pathinfo])}-->
+					<!--{if !empty($_G['setting']['pathinfo'])}-->
 					let param = '{$_GET[hashparams]}';
 					if(param){
 						param = JSON.parse(param);

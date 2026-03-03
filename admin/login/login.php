@@ -11,10 +11,13 @@ if (!defined('IN_OAOOA') ) {
     exit('Access Denied');
 }
 
-  html_login_header();
+$admincp = (isset($admincp) && is_object($admincp)) ? $admincp : (isset($this) ? $this : null);
 
-if ($admincp -> cpaccess == -1 || $admincp -> cpaccess == -4) {
-    $ltime = $this -> sessionlife - (TIMESTAMP - $this -> adminsession['dateline']);
+html_login_header();
+
+if ($admincp && ($admincp -> cpaccess == -1 || $admincp -> cpaccess == -4)) {
+    $dateline = isset($admincp -> adminsession['dateline']) ? $admincp -> adminsession['dateline'] : TIMESTAMP;
+    $ltime = $admincp -> sessionlife - (TIMESTAMP - $dateline);
     echo '<p class="logintips">' . lang('login_cplock', array('ltime' => $ltime)) . '</p>';
 
 } else {
@@ -44,8 +47,8 @@ function html_login_header($form = true) {
 EOT;
 
     if ($form) {
-        $loginset_img=$_G['setting']['loginset']['img']?$_G['setting']['loginset']['img']:'admin/login/images/bg.jpg';
-        $loginset_bcolor=$_G['setting']['loginset']['bcolor']?$_G['setting']['loginset']['bcolor']:'#76838f';
+        $loginset_img=!empty($_G['setting']['loginset']['img']) ? $_G['setting']['loginset']['img'] : 'admin/login/images/bg.jpg';
+        $loginset_bcolor=!empty($_G['setting']['loginset']['bcolor']) ? $_G['setting']['loginset']['bcolor'] : '#76838f';
         echo <<<EOT
 <div id="wrapper_div" style="width: 100%;height:100%;  position: absolute; top: 0px; left: 0px; margin: 0px; padding: 0px; overflow: hidden;z-index:0;  font-size: 0px; background:$loginset_bcolor;"> 
 	
@@ -86,10 +89,10 @@ function html_login_form() {
     }else{
         $avastar = avatar_block($uid);
     }
-	$_GET['referer'] = dhtmlspecialchars($_GET['referer'], ENT_QUOTES);
+		$_GET['referer'] = dhtmlspecialchars(isset($_GET['referer']) ? $_GET['referer'] : '', ENT_QUOTES);
     $referer = str_replace('&amp;', '&', $_GET['referer']);
     $avastar.='<div class="maintitle">'.$maintitle.'</div>';
-    $extra = BASESCRIPT . '?' . $_SERVER['QUERY_STRING'];
+    $extra = BASESCRIPT . '?' . (isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '');
 	$placeholder_password=lang('password');
 	$placeholder_login=lang('login');
     echo <<<EOT

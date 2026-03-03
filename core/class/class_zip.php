@@ -117,11 +117,11 @@ class SimpleUnzip {
 
 		var $Time = 0;
 
-		function SimpleUnzip($in_FileName = '') {
-			if($in_FileName !== '') {
-				SimpleUnzip::ReadFile($in_FileName);
-			}
-		} // end of the 'SimpleUnzip' constructor
+			function SimpleUnzip($in_FileName = '') {
+				if($in_FileName !== '') {
+					$this->ReadFile($in_FileName);
+				}
+			} // end of the 'SimpleUnzip' constructor
 
 		function Count() {
 			return count($this->Entries);

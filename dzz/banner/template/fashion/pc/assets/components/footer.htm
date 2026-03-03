@@ -31,5 +31,5 @@
             </template>
         </template>
     </el-menu>
-    <el-text v-if="'{$_G['setting']['sitebeiantxt']}' || '{$_G['setting']['sitebeian']}'" tag="p" style="display: flex;align-items: center;justify-content: center;margin-top: 10px;">{$_G['setting']['sitebeiantxt']} <el-link href="https://beian.miit.gov.cn/" target="_blank">{$_G['setting']['sitebeian']}</el-link></el-text>
+    <el-text v-if="'{eval echo isset($_G['setting']['sitebeiantxt']) ? $_G['setting']['sitebeiantxt'] : "" ;}' || '{eval echo isset($_G['setting']['sitebeian']) ? $_G['setting']['sitebeian'] : "" ;}'" tag="p" style="display: flex;align-items: center;justify-content: center;margin-top: 10px;">{eval echo isset($_G['setting']['sitebeiantxt']) ? $_G['setting']['sitebeiantxt'] : "" ;} <el-link href="https://beian.miit.gov.cn/" target="_blank">{eval echo isset($_G['setting']['sitebeian']) ? $_G['setting']['sitebeian'] : "" ;}</el-link></el-text>
 </div>

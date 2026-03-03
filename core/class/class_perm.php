@@ -41,7 +41,7 @@ class perm {
 
         );
     }
-    public function setPerm($actions,$perm=0){
+    public static function setPerm($actions,$perm=0){
         if(!is_array($actions)) $actions=array($actions);
         $powerarr=self::getPowerArr();
         foreach($actions as $action){

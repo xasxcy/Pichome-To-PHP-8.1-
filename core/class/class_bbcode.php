@@ -60,7 +60,7 @@ class bbcode {
 		return $this->bb_img($matches[1]);
 	}
 
-	function parseurl($message) {
+	static function parseurl($message) {
 		return preg_replace("/(?<=[^\]a-z0-9-=\"'\\/])((https?|ftp|gopher|news|telnet|mms|rtsp):\/\/)([a-z0-9\/\-_+=.~!%@?#%&;:$\\()|]+)/i", "[url]\\1\\3[/url]", ' '.$message);
 	}
 

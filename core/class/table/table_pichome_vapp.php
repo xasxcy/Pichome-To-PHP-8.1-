@@ -447,7 +447,7 @@ class table_pichome_vapp extends dzz_table
                         'name' =>  $defaultfileds[$index]['name'],
                         'checked' => $data['fileds'][$k]['checked'],
                         'enable'=>$data['fileds'][$k]['enable'],
-                        'options'=>$data['fileds'][$k]['options']
+                        'options'=>isset($data['fileds'][$k]['options']) ? $data['fileds'][$k]['options'] : array()
                     ];
                 }
             }

@@ -1,0 +1,39 @@
+<!DOCTYPE>
+<html>
+<head>
+<title>管理员登录入口</title>
+<base href="http://127.0.0.1:18084/">
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<link rel="stylesheet" href="admin/login/images/adminlogin.css" type="text/css" media="all" />
+<script type="text/javascript" src="static/js/md5.js"></script> 
+</head>
+<body><div id="wrapper_div" style="width: 100%;height:100%;  position: absolute; top: 0px; left: 0px; margin: 0px; padding: 0px; overflow: hidden;z-index:0;  font-size: 0px; background:#76838f;"> 
+	
+	<img src="admin/login/images/bg.jpg" name="imgbg" id="imgbg" style="right: 0px; bottom: 0px; top: 0px; left: 0px; z-index:1;margin:0;padding:0;overflow:hidden; position: absolute;width:100%;height:100%" height="100%" width="100%">
+</div>
+<div class="mainContainer">
+<table class="loginContainer" width="100%" height="100%" style="layout:f">
+<tr><td align="center" valign="middle">    	
+		<form method="post" name="login" id="loginform" action="index.php?mod=systeminfo" onsubmit="pwmd5('admin_password')">
+            <input type="hidden" name="sid" value="Rdg74v">
+            <input type="hidden" name="referer" value="">
+            <div class="loginformContainer">       
+                <div class="avatarContainer"><img src="data/attachment/sitelogo/sitelogo.png?iVY" /><div class="maintitle">管理员登录入口</div></div>
+				
+                <input class="form-control" name="admin_email"  type="text" placeholder="登录邮箱或用户名"  autocomplete="off" />
+                <div id="admin_password_Container">
+						<input  name="admin_password"  id="admin_password"  type="password" class="form-control"  value="" autocomplete="off" placeholder="密　码" />
+
+                </div>
+                <button name="submit"  type="submit" class="btn btn-primary btn-block btn-lg" >登录</button>
+                
+             </div>
+             
+		 </form>
+		<div class="copyright">Powered by <a href="https://www.oaooa.com/" target="_blank">Pichome</a> &copy; 2012-2026</div></td>
+</tr>
+</table>
+</div>
+</body>
+</html>

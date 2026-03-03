@@ -149,7 +149,7 @@ class dzz_ftp
 		return $this->_error;
 	}
 
-	function clear($str) {
+	static function clear($str) {
 		return str_replace(array( "\n", "\r", '..'), '', $str);
 	}
 

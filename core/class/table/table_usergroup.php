@@ -101,7 +101,7 @@ class table_usergroup extends dzz_table
         }
     }
 
-    public function fetch_all($ids)
+    public function fetch_all($ids, $force_from_db = false)
     {
         if (!$ids) {
             return null;

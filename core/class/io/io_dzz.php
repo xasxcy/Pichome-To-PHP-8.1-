@@ -582,8 +582,7 @@ class io_dzz extends io_api
             if(is_file($path)){
                 return true;
             }else{
-                if(!$handle = fopen($path,'r')){
-                    fclose($handle);
+                if(!$handle = @fopen($path,'r')){
                     return false;
                 }else{
                     fclose($handle);
@@ -697,7 +696,7 @@ class io_dzz extends io_api
     //@param number $fid  目录id
     //@param bool $isfolder  查找同名目录
     //return icoid  返回icoid
-    public function getRepeatIDByName($filename, $fid, $isfolder = false)
+    public static function getRepeatIDByName($filename, $fid, $isfolder = false)
     {
 
         $sql = "pfid=%d and name=%s and isdelete<1";
@@ -948,7 +947,7 @@ class io_dzz extends io_api
         unset($header['Chunk']);
         return $header;
     }
-    public function createThumbByOriginal($path, $data, $width = 0, $height = 0, $thumbtype = 1, $original = 0, $extraparams = array(), $filesize = 0)
+    public static function createThumbByOriginal($path, $data, $width = 0, $height = 0, $thumbtype = 1, $original = 0, $extraparams = array(), $filesize = 0)
     {
         global $_G;
         //获取文件地址

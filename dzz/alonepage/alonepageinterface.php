@@ -224,9 +224,11 @@ if($do == 'addpage'){//新建单页
     exit(json_encode(['success'=>true,'data'=>$data]));
 }elseif($do == 'getmouldstyle'){//获取模块样式
     $mould = isset($_GET['mould']) ? trim($_GET['mould']):'slide';
-    $themedata = $_G['setting']['pichomethemedata'][$themeid];
+    $allThemeData = isset($_G['setting']['pichomethemedata']) && is_array($_G['setting']['pichomethemedata']) ? $_G['setting']['pichomethemedata'] : array();
+    $themedata = isset($allThemeData[$themeid]) && is_array($allThemeData[$themeid]) ? $allThemeData[$themeid] : array();
+    $themestyle = isset($themedata['themestyle']) && is_array($themedata['themestyle']) ? $themedata['themestyle'] : array();
     $returndata = [];
-    foreach($themedata['themestyle'] as $k=>$v){
+    foreach($themestyle as $k=>$v){
         foreach($v as $k1=>$v1){
            if($v1['title']) $v1['title'] = lang($v1['title']);
             if(isset($v1['size'])){

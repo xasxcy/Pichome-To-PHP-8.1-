@@ -100,6 +100,9 @@
 		dzzoffice.WindowThis.LeftTabGroup(data,flag)
 	}
 	const { createApp, reactive, toRefs, toRef, ref, onMounted, nextTick, watch, computed, onBeforeUpdate } = Vue;
+	var UploadStorageMinxins =
+		(typeof UploaddzzMinxins !== 'undefined') ? UploaddzzMinxins :
+		(typeof UploadQCOSMinxins !== 'undefined') ? UploadQCOSMinxins : {};
 	var dzzoffice = createApp({
 		data(){
 			return {
@@ -156,7 +159,7 @@
 			<!--{/if}-->
 		},
 		
-		mixins:[leftMixins,HeaderMixins,ScreenMixin,CommonMixin,MixinImage,UploaderMinxins,RightMixin,MainMixins,FileMixins,Upload{$_G['setting']['defaultspacesetting']['bz']}Minxins,ShareAddDialogMixin],
+		mixins:[leftMixins,HeaderMixins,ScreenMixin,CommonMixin,MixinImage,UploaderMinxins,RightMixin,MainMixins,FileMixins,UploadStorageMinxins,ShareAddDialogMixin],
 		
 		methods:{
 			DocumentPageContentNotChecked(){
@@ -339,11 +342,11 @@
 			dzzoffice.WindowThis = this;
 		}
 	});
-	dzzoffice.use(ElementPlus, {
-		<!--{if $_G['language']=='zh-CN'}-->
-		locale: {$_G['language_list'][$_G['language']]['elementflagCamel']},
-		<!--{/if}-->
-	});
+		dzzoffice.use(ElementPlus, {
+			<!--{if $_G['language']=='zh-CN' && !empty($_G['language_list'][$_G['language']]['elementflagCamel'])}-->
+			locale: {$_G['language_list'][$_G['language']]['elementflagCamel']},
+			<!--{/if}-->
+		});
 
 	for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 		dzzoffice.component(key, component)

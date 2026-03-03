@@ -88,7 +88,9 @@ class template {
                 foreach($matches[2] as $k=>$match) {
                     // 分析模板文件名并读取内容
                     $parestr = $this->parse_template_include($match);
-                    $content = str_replace($matches[0][$k], $parestr, $content);
+                    $search = isset($matches[0][$k]) ? (string)$matches[0][$k] : '';
+                    $replace = is_string($parestr) ? $parestr : '';
+                    $content = str_replace($search, $replace, (string)$content);
                     // 再次对包含文件进行模板分析
                     $this->parse_include($content);
                 }

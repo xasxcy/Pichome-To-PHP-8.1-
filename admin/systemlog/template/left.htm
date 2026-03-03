@@ -20,13 +20,13 @@
 				}
 			}
 		},
-		created(){
-			<!--{if $_GET[op]!="admin" }-->
-			this.leftdata.activeIndex = 0;
-			<!--{else}-->
-			this.leftdata.activeIndex = 1;
-			<!--{/if}-->
-		},
+			created(){
+				<!--{if !isset($_GET['op']) || $_GET['op']!="admin" }-->
+				this.leftdata.activeIndex = 0;
+				<!--{else}-->
+				this.leftdata.activeIndex = 1;
+				<!--{/if}-->
+			},
 		methods:{
 			leftSelectMenu(key){
 				if(this.leftdata.activeIndex == key){

@@ -122,8 +122,8 @@
 		},
 		created(){
 			this.handleIsPc();
-			<!--{if intval($_G[setting][pathinfo])}-->
-			let param = '{$_GET[hashparams]}';
+			<!--{if intval($_G['setting']['pathinfo'])}-->
+			let param = "{eval echo isset($_GET['hashparams']) ? $_GET['hashparams'] : '';}";
 			if(param){
 				param = JSON.parse(param)
 				this.DocumentAppid = param.appid;
@@ -204,11 +204,11 @@
 			comsort
 		}
 	});
-	dzzoffice.use(ElementPlus, {
-		<!--{if $_G['language']=='zh-CN'}-->
-		locale: {$_G['language_list'][$_G['language']]['elementflagCamel']},
-		<!--{/if}-->
-	});
+		dzzoffice.use(ElementPlus, {
+			<!--{if $_G['language']=='zh-CN' && !empty($_G['language_list'][$_G['language']]['elementflagCamel'])}-->
+			locale: {$_G['language_list'][$_G['language']]['elementflagCamel']},
+			<!--{/if}-->
+		});
 	for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 		dzzoffice.component(key, component)
 	}

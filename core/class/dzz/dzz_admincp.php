@@ -49,17 +49,17 @@ class dzz_admincp
 		$this->isfounder = $this->checkfounder($this->adminuser);
 
 		$this->sessionlimit = TIMESTAMP - $this->sessionlife;
-        $opname = $_GET['op'];
-        if(!$this->api && in_array($opname,$this->isnotloginop)){
+        $opname = isset($_GET['op']) ? $_GET['op'] : '';
+        if(!$this->isapi && in_array($opname,$this->isnotloginop)){
             $this->isnotlogin = true;
         }
-        $this->isapi = ((isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') || (!isset($_GET['ajax_submit']) && $_GET['ajax_submit']))
+        $this->isapi = ((isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') || (isset($_GET['ajax_submit']) && $_GET['ajax_submit']))
             ? true : false;
 		$return  = $this->check_cpaccess();
 		if( $return === 0){
 		    return $return;
         }
-		if(  $_GET['mod']!="systemlog"){
+		if((isset($_GET['mod']) ? $_GET['mod'] : '')!="systemlog"){
 			$this->writecplog();
 		}
 		
@@ -108,7 +108,7 @@ class dzz_admincp
 			} elseif ($session && empty($session['uid'])) {
 				$this->cpaccess = 1;
 
-			} elseif ($this->config['admincp']['checksession'] && ($session['dateline'] < (TIMESTAMP - $this->config['admincp']['checksession']))) {
+				} elseif ($this->core->config['admincp']['checksession'] && ($session['dateline'] < (TIMESTAMP - $this->core->config['admincp']['checksession']))) {
 				$this->cpaccess = 1;
 
 			} elseif ($this->cpsetting['checkip'] && ($session['ip'] != $this->core->var['clientip'])) {
@@ -173,8 +173,8 @@ class dzz_admincp
 		if($ucresult[0] > 0) {
 			C::t('admincp_session')->update_by_uid($this->adminuser['uid'], $this->adminuser['groupid'], array('dateline' => TIMESTAMP, 'ip' => $this->core->var['clientip'], 'errorcount' => -1));
             if((!$this->isapi && ! $this->isnotlogin))  {
-                $referer = ($_GET['referer']) ? $_GET['referer']:$_SERVER['HTTP_REFERER'];
-             dheader('Location: '.$referer);
+	                $referer = isset($_GET['referer']) && $_GET['referer'] ? $_GET['referer'] : (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : ADMINSCRIPT);
+	             dheader('Location: '.$referer);
             }
 		} else {
 			$errorcount = $this->adminsession['errorcount'] + 1;
@@ -205,10 +205,10 @@ class dzz_admincp
 							'errorcount' => -1), false, true);
 
 						setloginstatus($result['member'], 0);
-						$referer = ($_GET['referer']) ? $_GET['referer']:$_SERVER['HTTP_REFERER'];
-                        if((!$this->isapi && ! $this->isnotlogin)) {
-                            $referer = ($_GET['referer']) ? $_GET['referer']:$_SERVER['HTTP_REFERER'];
-                            dheader('Location: '.$referer );
+						$referer = isset($_GET['referer']) && $_GET['referer'] ? $_GET['referer'] : (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : ADMINSCRIPT);
+	                        if((!$this->isapi && ! $this->isnotlogin)) {
+	                            $referer = isset($_GET['referer']) && $_GET['referer'] ? $_GET['referer'] : (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : ADMINSCRIPT);
+	                            dheader('Location: '.$referer );
                             //dheader('Location: '.ADMINSCRIPT.'?'.cpurl('url', array('sid')));
                         }
 

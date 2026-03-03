@@ -581,6 +581,13 @@ function dhtmlspecialchars($string, $flags = null)
             $string[$key] = dhtmlspecialchars($val, $flags);
         }
     } else {
+        if ($string === null) {
+            $string = '';
+        } elseif (is_bool($string)) {
+            $string = $string ? '1' : '0';
+        } elseif (!is_string($string)) {
+            $string = (string)$string;
+        }
         $string = str_replace(array('&amp;', '&quot;', '&lt;', '&gt;'),array('&', '"', '<', '>'), $string);
         if ($flags === null) {
             $string = str_replace(array('&', '"', '<', '>'), array('&amp;', '&quot;', '&lt;', '&gt;'), $string);
@@ -831,7 +838,7 @@ function avatar_block($uid = 0, $headercolors = array(), $class = "Topcarousel")
         return '<img src="avatar.php?uid=' . $user['uid'] . '&random=' . VERHASH . '" class="img-circle special_avatar_class" title="' . $user['username'] . '">';
     } else {//没有上传头像，使用背景+首字母
         if ($uid) {
-            if ($headercolors[$uid]) $headerColor = $headercolors[$uid];
+            if (isset($headercolors[$uid]) && $headercolors[$uid]) $headerColor = $headercolors[$uid];
             else $headerColor = C::t('user_setting')->fetch_by_skey('headerColor', $user['uid']);
             if (empty($headerColor)) {//没有设置时，创建头像背景色，并且入库
                 $colorkey = rand(1, 15);
@@ -1422,7 +1429,7 @@ function output()
         define('DZZ_OUTPUTED', 1);
     }
 
-    if ($_G['config']['rewritestatus']) {
+    if (!empty($_G['config']['rewritestatus'])) {
         $content = ob_get_contents();
         $content = output_replace($content);
         ob_end_clean();
@@ -1539,11 +1546,13 @@ function debuginfo()
 {
     global $_G;
     if (getglobal('config/debug')) {
-        $db = &DB::object();
+        $db = DB::object();
+        $memory = C::memory();
+        $memoryType = ($memory && isset($memory->type)) ? (string)$memory->type : '';
         $_G['debuginfo'] = array(
             'time' => number_format((microtime(true) - $_G['starttime']), 6),
             'queries' => $db->querynum,
-            'memory' => ucwords(C::memory()->type)
+            'memory' => ucwords($memoryType)
         );
         if ($db->slaveid) {
             $_G['debuginfo']['queries'] = 'Total ' . $db->querynum . ', Slave ' . $db->slavequery;
@@ -3877,16 +3886,26 @@ function getOpentype($ext)
 function getthemedata($themeid)
 {
     global $_G;
-    $singlepage = [];
-    $themedata = $_G['setting']['pichomethemedata'][$themeid];
-    $singletpldata = unserialize($themedata['templates']);
-    $singletpltagdata = unserialize($themedata['themetag']);
+    $singlepage = array();
+    $themebanner = '';
+    $themeid = (string)$themeid;
+    $allThemeData = isset($_G['setting']['pichomethemedata']) && is_array($_G['setting']['pichomethemedata']) ? $_G['setting']['pichomethemedata'] : array();
+    $themedata = isset($allThemeData[$themeid]) && is_array($allThemeData[$themeid]) ? $allThemeData[$themeid] : array();
+
+    $singletpldata = isset($themedata['templates']) ? dunserialize($themedata['templates']) : array();
+    $singletpltagdata = isset($themedata['themetag']) ? dunserialize($themedata['themetag']) : array();
+    $singletpldata = is_array($singletpldata) ? $singletpldata : array();
+    $singletpltagdata = is_array($singletpltagdata) ? $singletpltagdata : array();
+
     foreach ($singletpldata as $k => $v) {
-        if (isset($singletpltagdata[$k])) {
-            $singlepage[] = ['name' => $v['name'] . lang('setting'), 'flag' => $k];
+        if (isset($singletpltagdata[$k]) && is_array($v) && isset($v['name'])) {
+            $singlepage[] = array('name' => $v['name'] . lang('setting'), 'flag' => $k);
         }
     }
-    return ['singlepage' => $singlepage, 'themebanner' => $themedata['themebanner']];
+    if (isset($themedata['themebanner'])) {
+        $themebanner = $themedata['themebanner'];
+    }
+    return array('singlepage' => $singlepage, 'themebanner' => $themebanner);
 
 
 }

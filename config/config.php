@@ -224,4 +224,5 @@ $_config['notallowDirectoryEditFilename'] = 1;
 
 
 // -------------------  THE END  --------------------
+$_config['debug'] = 0;
  return $_config;

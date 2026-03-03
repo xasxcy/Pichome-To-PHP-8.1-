@@ -86,8 +86,8 @@
 				headeralldata:{
 					data:[],
 					message:{
-						sitebeiantxt:'{$_G[setting][sitebeiantxt]}',
-						sitebeian:'{$_G[setting][sitebeian]}',
+						sitebeiantxt:'{eval echo isset($_G['setting']['sitebeiantxt']) ? $_G['setting']['sitebeiantxt'] : "";}',
+						sitebeian:'{eval echo isset($_G['setting']['sitebeian']) ? $_G['setting']['sitebeian'] : "";}',
 					}
 				},
 				tilebanner:[]

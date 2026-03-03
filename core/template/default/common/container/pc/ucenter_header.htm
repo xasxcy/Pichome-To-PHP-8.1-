@@ -6,7 +6,7 @@
 		</el-avatar>
 		<div class="utitle">
 			<div><el-text size="large" tag="b">$_G['username']</el-text></div>
-			<div><el-text type="info" size="small">$_G['group']['grouptitle']</el-text></div>
+			<div><el-text type="info" size="small">{eval echo isset($_G['group']['grouptitle']) ? $_G['group']['grouptitle'] : '';}</el-text></div>
 		</div>
 	</el-space>
 	<div class="uedit" >

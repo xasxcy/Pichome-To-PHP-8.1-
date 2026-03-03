@@ -23,7 +23,7 @@ class table_pichome_folderresources extends dzz_table
         if ($id = DB::result_first("select id from %t where rid = %s and fid = %s and appid = %s", array($this->_table, $setarr['rid'], $setarr['fid'], $setarr['appid']))) {
             $rid = $setarr['rid'];
             unset($setarr['rid']);
-            C::t('pichome_resources_attr')->update_attrs_by_ridFid($setarr['rid'], $setarr['fid'], $setarr['appid']);
+            C::t('pichome_resources_attr')->update_attrs_by_ridFid($rid, $setarr['fid'], $setarr['appid']);
             return parent::update($id, $setarr);
         }
         if (parent::insert($setarr)) {
@@ -35,7 +35,7 @@ class table_pichome_folderresources extends dzz_table
             }
             C::t('pichome_resources_attr')->update_attrs_by_ridFid($setarr['rid'], $setarr['fid'], $setarr['appid']);
             $fids = implode(',', $ofidarr);
-            C::t('pichome_resources')->update_by_rids($setarr['appid'], $setarr['rid'], ['fids' => $fids, 'lastdate' => TIMESTMP]);
+            C::t('pichome_resources')->update_by_rids($setarr['appid'], $setarr['rid'], ['fids' => $fids, 'lastdate' => TIMESTAMP]);
             C::t('pichome_folder')->add_filenum_by_fid($setarr, 1);
         }
 
@@ -58,7 +58,7 @@ class table_pichome_folderresources extends dzz_table
             $ofidarr = explode(',', $ofids);
             $fidarr = array_diff($ofids, $fids);
             $fids = implode(',', $fidarr);
-            C::t('pichome_resources')->update_by_rids($v['appid'], $v['rid'], ['fids' => $fids, 'lastdate' => TIMESTMP]);
+            C::t('pichome_resources')->update_by_rids($v['appid'], $v['rid'], ['fids' => $fids, 'lastdate' => TIMESTAMP]);
             parent::delete($v['id']);
         }
     }
@@ -76,7 +76,7 @@ class table_pichome_folderresources extends dzz_table
             $dindex = array_search($v['fid'], $fidarr);
             unset($fidarr[$dindex]);
             $fids = implode(',', $fidarr);
-            C::t('pichome_resources')->update_by_rids($v['appid'], $v['rid'], ['fids' => $fids, 'lastdate' => TIMESTMP]);
+            C::t('pichome_resources')->update_by_rids($v['appid'], $v['rid'], ['fids' => $fids, 'lastdate' => TIMESTAMP]);
             //减少目录文件数
             if (!$rdata['isdelete']) C::t('pichome_folder')->add_filenum_by_fid($v['fid'], -1);
 

@@ -13,6 +13,18 @@ if (!defined('IN_OAOOA')) {
 
 class table_cache extends dzz_table
 {
+    private function decode_cachevalue($value)
+    {
+        if (!is_string($value)) {
+            return $value;
+        }
+        $decoded = @unserialize($value);
+        if ($decoded !== false || $value === 'b:0;' || $value === 'a:0:{}' || $value === 'N;') {
+            return $decoded;
+        }
+        return $value;
+    }
+
     public function __construct()
     {
 
@@ -45,12 +57,12 @@ class table_cache extends dzz_table
     public function fetch_cachedata_by_cachename($cachename, $expiretime = 600)
     {
         if (memory('check')) {
-            $data = ($data = memory('get', $cachename)) === false ? array() : (unserialize($data['cachevalue']) ? unserialize($data['cachevalue']):$data['cachevalue']);
+            $data = ($data = memory('get', $cachename)) === false ? array() : $this->decode_cachevalue($data['cachevalue']);
         } else {
 
             $cachedata = parent::fetch($cachename);
             if ($cachedata && ($cachedata['dateline'] + $expiretime) > TIMESTAMP) {
-                $data = unserialize($cachedata['cachevalue']) ?  unserialize($cachedata['cachevalue']):$cachedata['cachevalue'];
+                $data = $this->decode_cachevalue($cachedata['cachevalue']);
             } else {
                 $data = array();
             }
@@ -92,4 +104,3 @@ class table_cache extends dzz_table
 
     }
 }
-

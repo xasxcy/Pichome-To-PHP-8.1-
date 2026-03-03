@@ -1,6 +1,6 @@
 <!--{template common/container/pc/header_start}-->
 <link rel="stylesheet" href="static/scss/default/index.css?{VERHASH}">
-<link rel="stylesheet" href="{MOD_PATH}/template/asstes/css/index.css?{VERHASH}">
+<link rel="stylesheet" href="{MOD_PATH}/template/assets/css/index.css?{VERHASH}">
 <!-- <link rel="stylesheet" href="static/scss/admin.css?{VERHASH}"> -->
 <script src="static/js/sortable.min.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/vue_components/locale/index.js?{VERHASH}"></script>
@@ -164,7 +164,7 @@
         }
 	});
 	dzzoffice.use(ElementPlus, {
-		locale: {$_G['language_list'][$_G['language']]['elementflagCamel']},
+		locale: window['{$_G['language_list'][$_G['language']]['elementflagCamel']}'] || undefined,
 	});
 	for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 		dzzoffice.component(key, component)

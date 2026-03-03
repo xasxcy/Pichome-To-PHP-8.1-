@@ -12,7 +12,7 @@ $ismobile=helper_browser::ismobile();
 
 $navtitle=lang('appname');
 Hook::listen('adminlogin');
-$do=$_GET['do'];
+$do = isset($_GET['do']) ? $_GET['do'] : '';
 if ($do == 'authorize') {//授权信息
         include_once libfile( 'function/cache' );
 		$operation = isset($_GET['operation']) ? trim($_GET['operation']) : '';

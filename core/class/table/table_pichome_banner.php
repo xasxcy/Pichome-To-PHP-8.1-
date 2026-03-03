@@ -281,6 +281,9 @@ class table_pichome_banner extends dzz_table
 
     public function buildTree(&$items, $parentId = 0, &$tree = [])
     {
+        if (!is_array($items)) {
+            return $tree;
+        }
         foreach ($items as $item) {
             if ($item['pid'] == $parentId) {
                 $children = [];
@@ -295,6 +298,9 @@ class table_pichome_banner extends dzz_table
     public function getBannerTree($id=''){
         $result = [];
         $bannerlist = $this->getBannerTreeData();
+        if (!is_array($bannerlist)) {
+            $bannerlist = [];
+        }
 
         $bannerdata = $this->buildTree($bannerlist);
         foreach ($bannerdata as $key=>$value){

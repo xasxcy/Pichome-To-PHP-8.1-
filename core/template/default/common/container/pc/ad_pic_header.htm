@@ -30,7 +30,7 @@
             :adminid="parseInt($_G['adminid'])"
             PICHOME_LIENCE="<!--{if defined('PICHOME_LIENCE')}--><!--{/if}-->"
             :uid="parseInt($_G['uid'])"
-            upgrade="<!--{if $_G['setting']['upgrade']}--><!--{/if}-->"
+            upgrade="<!--{if !empty($_G['setting']['upgrade'])}--><!--{/if}-->"
             version="$_G['setting']['version']"
             formhash="{FORMHASH}"
             :isrefresh="true">

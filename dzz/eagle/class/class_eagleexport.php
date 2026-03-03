@@ -409,7 +409,7 @@ class eagleexport
                                                 'name' => $filename,
                                                 'dateline' => $filemetadata['lastModified'],
                                                 'isdelete' => $filemetadata['isDeleted'],
-                                                'grade' => $filemetadata['star'] ? intval($filemetadata['star']) : 0,
+                                                'grade' => !empty($filemetadata['star']) ? intval($filemetadata['star']) : 0,
                                                 'lastdate' => $flastdate,
                                                 'width' => $filemetadata['width'] ? $filemetadata['width'] : 0,
                                                 'height' => $filemetadata['height'] ? $filemetadata['height'] : 0,
@@ -436,7 +436,7 @@ class eagleexport
                                                 $tagids = [];
                                                 //原有标签
                                                 $oldtids = [];
-                                                if ($attrdata['tag']) $oldtids = explode(',', $attrdata['tag']);
+                                                if (!empty($attrdata['tag'])) $oldtids = explode(',', $attrdata['tag']);
 
                                                 if (!empty($tags)) {
                                                     $tagids = $this->addtag($tags);
@@ -501,7 +501,7 @@ class eagleexport
                                                 //描述数据
                                                 $setarr['desc'] = $filemetadata['annotation'] ? $filemetadata['annotation'] : '';
                                                 $setarr['searchval'] .= getstr($setarr['desc'],255) . $setarr['link'];
-                                                if ($filemetadata['duration']) $setarr['duration'] = number_format($filemetadata['duration'], 2);
+                                                if (!empty($filemetadata['duration'])) $setarr['duration'] = number_format($filemetadata['duration'], 2);
                                                 $setarr['rid'] = $rid;
                                                 C::t('pichome_resources_attr')->insert($setarr);
                                                 unset($filemetadata);
@@ -1004,7 +1004,7 @@ class eagleexport
             'mtime' => $filemetadata['mtime'],
             'isdelete' => $filemetadata['isDeleted'],
             'hasthumb' => $thumb,
-            'grade' => $filemetadata['star'] ? intval($filemetadata['star']) : 0,
+            'grade' => !empty($filemetadata['star']) ? intval($filemetadata['star']) : 0,
             'type' => $type,
             'lastdate' => $filemetadata['lastdate'],
             'fids' => implode(',', $filemetadata['folders']),
@@ -1089,7 +1089,7 @@ class eagleexport
                 }
             }
             //时长
-            if ($filemetadata['duration']) $setarr['duration'] = number_format($filemetadata['duration'], 2);
+            if (!empty($filemetadata['duration'])) $setarr['duration'] = number_format($filemetadata['duration'], 2);
             //链接数据
             $setarr['link'] = $filemetadata['url'] ? trim($filemetadata['url']) : '';
             //描述数据

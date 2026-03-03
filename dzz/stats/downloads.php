@@ -6,7 +6,7 @@ $navtitle = lang("my_downloads");
 Hook::listen('check_login');//检查是否登录，未登录跳转到登录界面
 global $_G;
 $uid = $_G['uid'];
-$do = $_GET['do'];
+$do = isset($_GET['do']) ? trim($_GET['do']) : '';
 $now = dgmdate(TIMESTAMP, 'Y-m-d');
 $actionData = array(
     'all' => array('key' => 'all', 'name' => lang('all'), 'value' => ''),
@@ -32,12 +32,15 @@ if ($do == 'filelist') {
     $keyword = isset($_GET['keyword']) ? htmlspecialchars($_GET['keyword']) : '';
     $wheresql = ' idtype = %d and uid = %d';
     $params = ['stats_view', 1, $uid];
-    $para = [];
+    $param = [];
     if ($keyword) {
         $wheresql .= ' and name like %s ';
         $param[] = '%' . $keyword . '%';
     }
     $dataActive = isset($_GET['date']) ? trim($_GET['date']) : 'all';
+    if (!isset($actionData[$dataActive])) {
+        $dataActive = 'all';
+    }
     $date = $actionData[$dataActive]['value'];
     if ($date) {
         $dateline = explode('_', $date);

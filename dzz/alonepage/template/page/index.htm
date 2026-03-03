@@ -359,7 +359,7 @@
 
 	});
 	dzzoffice.use(ElementPlus, {
-		locale: {$_G['language_list'][$_G['language']]['elementflagCamel']},
+		locale: window['{$_G['language_list'][$_G['language']]['elementflagCamel']}'] || undefined,
 	});
 	for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 		dzzoffice.component(key, component)

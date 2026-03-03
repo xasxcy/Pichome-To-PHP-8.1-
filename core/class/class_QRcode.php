@@ -1481,7 +1481,7 @@
         }
         
         //----------------------------------------------------------------------
-        public function estimateBitsModeKanji($size)
+        public static function estimateBitsModeKanji($size)
         {
             return (int)(($size / 2) * 13);
         }
@@ -3309,5 +3309,4 @@
             }
         }
     }
-
 

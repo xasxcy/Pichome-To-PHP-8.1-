@@ -6,49 +6,71 @@ if(!defined('IN_OAOOA')) {
 include_once DZZ_ROOT.'./core/core_version.php';
 
  global $_G;
-if($_GET['action'] == 'checkupgrade') {
+$action = isset($_GET['action']) ? trim($_GET['action']) : '';
+if($action == 'checkupgrade') {
 	header('Content-Type: text/javascript');
-    if($_G['uid']) {
-        $dzz_upgrade = new dzz_upgrade();
-        $dzz_upgrade->check_authlic();
-        dsetcookie('checkauthlic', 1, 60*60*24);
-    }
-	if($_G['uid'] && $_G['member']['adminid'] == 1) {
-		$dzz_upgrade = new dzz_upgrade();
-		$dzz_upgrade->check_upgrade();
-		dsetcookie('checkupgrade', 1, 60*60*24);
+	try {
+		if(!empty($_G['uid']) && class_exists('dzz_upgrade')) {
+			$dzz_upgrade = new dzz_upgrade();
+			$dzz_upgrade->check_authlic();
+			dsetcookie('checkauthlic', 1, 60*60*24);
+		}
+		if(!empty($_G['uid']) && isset($_G['member']['adminid']) && intval($_G['member']['adminid']) === 1 && class_exists('dzz_upgrade')) {
+			$dzz_upgrade = new dzz_upgrade();
+			$dzz_upgrade->check_upgrade();
+			dsetcookie('checkupgrade', 1, 60*60*24);
+		}
+	} catch (Throwable $e) {
+		// Keep this polling endpoint script-safe for frontend.
 	}
 	exit; 
-}elseif($_GET['action'] == 'checkappupgrade') {
+}elseif($action == 'checkappupgrade') {
 	header('Content-Type: text/javascript'); 
-	if($_G['uid'] && $_G['member']['adminid'] == 1) { 
-		$dzz_upgrade_app = new dzz_upgrade_app(); 
-		$dzz_upgrade_app->check_upgrade();
-		dsetcookie('checkappupgrade', 1, 60*60*24);
+	try {
+		if(!empty($_G['uid']) && isset($_G['member']['adminid']) && intval($_G['member']['adminid']) === 1 && class_exists('dzz_upgrade_app')) { 
+			$dzz_upgrade_app = new dzz_upgrade_app(); 
+			$dzz_upgrade_app->check_upgrade();
+			dsetcookie('checkappupgrade', 1, 60*60*24);
+		}
+	} catch (Throwable $e) {
+		// Keep this polling endpoint script-safe for frontend.
 	}
 	exit; 
-}elseif($_GET['action'] == 'checkauthlic'){
-    if($_G['uid']) {
-        $dzz_upgrade = new dzz_upgrade();
-        $dzz_upgrade->check_authlic();
-        dsetcookie('checkauthlic', 1, 60*60*24);
-    }
-}elseif($_GET['action'] == 'upgradenotice') {
+}elseif($action == 'checkauthlic'){
+	header('Content-Type: text/javascript');
+	try {
+		if(!empty($_G['uid']) && class_exists('dzz_upgrade')) {
+			$dzz_upgrade = new dzz_upgrade();
+			$dzz_upgrade->check_authlic();
+			dsetcookie('checkauthlic', 1, 60*60*24);
+		}
+	} catch (Throwable $e) {
+		// Keep this polling endpoint script-safe for frontend.
+	}
+	exit;
+}elseif($action == 'upgradenotice') {
 	$html='';
 	$list = array();
 	$isajax = isset($_GET['isajax']) ? intval($_GET['isajax']) : 0;
-	if($_G['member']['adminid'] == 1) {
-		$notelist='';
-		$dbversion = helper_dbtool::dbversion();
-		//系统升级信息
-		foreach($_G['setting']['upgrade'] as $type => $upgrade) {
-			if(version_compare($upgrade['phpversion'], PHP_VERSION) > 0 || version_compare($upgrade['mysqlversion'], $dbversion) > 0) {
-				$list[$type]['note']= lang('require_allocation_attain').' php v'.PHP_VERSION.'MYSQL v'.$dbversion;
-			}
-			$list[$type]['icon']='dzz/images/default/notice_system.png';
-			$list[$type]['official']='admin.php?mod=system#/systemupgrade';
-			$list[$type]['title']='oaooa &nbsp;<b>'.$upgrade['latestversion'].'</b>';
-			$list[$type]['appurl']= 'admin.php?mod=system&op=systemupgrade';
+		if(isset($_G['member']['adminid']) && $_G['member']['adminid'] == 1) {
+			$notelist='';
+			$dbversion = helper_dbtool::dbversion();
+			//系统升级信息
+			$upgradeList = (isset($_G['setting']['upgrade']) && is_array($_G['setting']['upgrade'])) ? $_G['setting']['upgrade'] : array();
+			foreach($upgradeList as $type => $upgrade) {
+                if(!is_array($upgrade)) {
+                    continue;
+                }
+                $phpver = isset($upgrade['phpversion']) ? $upgrade['phpversion'] : PHP_VERSION;
+                $mysqlver = isset($upgrade['mysqlversion']) ? $upgrade['mysqlversion'] : $dbversion;
+                $latestversion = isset($upgrade['latestversion']) ? $upgrade['latestversion'] : '';
+				if(version_compare($phpver, PHP_VERSION) > 0 || version_compare($mysqlver, $dbversion) > 0) {
+					$list[$type]['note']= lang('require_allocation_attain').' php v'.PHP_VERSION.'MYSQL v'.$dbversion;
+				}
+				$list[$type]['icon']='dzz/images/default/notice_system.png';
+				$list[$type]['official']='admin.php?mod=system#/systemupgrade';
+				$list[$type]['title']='oaooa &nbsp;<b>'.$latestversion.'</b>';
+				$list[$type]['appurl']= 'admin.php?mod=system&op=systemupgrade';
 			//&operation='.$type.'&version='.$upgrade['latestversion'].'&locale='.$locale.'&charset='.$charset.'&release='.$upgrade['latestrelease'];
 		}
 		if($isajax){
@@ -88,7 +110,15 @@ if($_GET['action'] == 'checkupgrade') {
 	//include template('common/footer_ajax');
 	exit;
 
-} elseif($_GET['action'] == 'appnotice') {
-	
-} 
-?>
+	} elseif($action == 'appnotice') {
+		
+	} else {
+        // Keep the endpoint response predictable for frontend polling callers.
+        $isajax = isset($_GET['isajax']) ? intval($_GET['isajax']) : 0;
+        if($isajax) {
+            header('Content-Type: application/json; charset=utf-8');
+            exit(json_encode(array('data' => array())));
+        }
+        exit;
+    }
+	?>

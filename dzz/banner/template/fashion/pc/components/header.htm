@@ -60,7 +60,7 @@
 			</template>
 			<template #suffix>
 				<el-button v-if="fheaderkeyword || searchdata.img" link icon="Close" style="font-size: 20px;" @click.stop="clearkeyword"></el-button>
-				<!--{if intval($_G['setting']['imageSearch_setting']['status'])}-->
+					<!--{if !empty($_G['setting']['imageSearch_setting']['status'])}-->
 				<el-popover
 					ref="cameraPopover"
 					popper-class="camera-popover"
@@ -207,7 +207,7 @@
 		:adminid="parseInt($_G[adminid])"
 		PICHOME_LIENCE="PICHOME_LIENCE"
 		:uid="parseInt($_G[uid])"
-		upgrade="<!--{if $_G['setting']['upgrade']}--><!--{/if}-->"
+		upgrade="<!--{if !empty($_G['setting']['upgrade'])}--><!--{/if}-->"
 		version="$_G[setting][version]"
 		formhash="{FORMHASH}">
 		<el-avatar size="40">
