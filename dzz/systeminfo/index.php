@@ -48,6 +48,7 @@ if ($do == 'authorize') {//授权信息
 
     }else{
 		 $version = defined('LICENSE_VERSION') ? lang(LICENSE_VERSION):lang('Home');
+		$licenseVersion = defined('LICENSE_VERSION') ? LICENSE_VERSION : '';
 		$limitusernum = defined('LICENSE_LIMIT') ? LICENSE_LIMIT:1;
 		if(defined('NOLIMITUSER')) $limitusernum = lang('unlimited');
 		$authdate = defined('LICENSE_CTIME') ? dgmdate(LICENSE_CTIME,'Y-m-d H:i:s'):'';

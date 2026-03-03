@@ -20,7 +20,11 @@ $about['logo']=$_G['setting']['attachurl'].'sitelogo/sitelogo.png';
 
 //站点logo,留空不显示
 //
-$license=array('license_limit'=>LICENSE_LIMIT,'license_version'=>LICENSE_VERSION,'license_company'=>LICENSE_COMPANY);
+$license=array(
+    'license_limit' => defined('LICENSE_LIMIT') ? LICENSE_LIMIT : '',
+    'license_version' => defined('LICENSE_VERSION') ? LICENSE_VERSION : '',
+    'license_company' => defined('LICENSE_COMPANY') ? LICENSE_COMPANY : ''
+);
 $ucount=DB::result_first("select COUNT(*) from %t where 1",array('user'));
 $versioncode = explode('.',CORE_VERSION);
 unset($versioncode[0]);

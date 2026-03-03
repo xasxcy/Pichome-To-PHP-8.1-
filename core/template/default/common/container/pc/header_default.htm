@@ -3,7 +3,7 @@
         <el-image class="logo" src="data/attachment/sitelogo/sitelogo.png?{VERHASH}" fit="contain">
             <template #error><div class="el-image__placeholder"></div></template>
         </el-image>
-        <el-link :underline="false" href="$_G['siteurl']"><el-text tag="b" size="large" style="color:var(--el-text-color-primary)">{eval echo $appname?$appname:$_G['setting'][sitename]}</el-text></el-link>
+        <el-link :underline="false" href="$_G['siteurl']"><el-text tag="b" size="large" style="color:var(--el-text-color-primary)">{eval echo $appname ? $appname : $_G['setting']['sitename'];}</el-text></el-link>
     </a>
     <div class="h-right"> 
         <el-tooltip content="切换页面配色" placement="bottom">
@@ -28,7 +28,7 @@
             formhash="{FORMHASH}"
             :isrefresh="true">
             <el-avatar size="40">
-                {eval echo avatar_block($_G[uid]);}
+                {eval echo avatar_block($_G['uid']);}
             </el-avatar>
         </comavatar>
     </div>

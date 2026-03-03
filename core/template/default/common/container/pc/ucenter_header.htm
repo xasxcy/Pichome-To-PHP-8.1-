@@ -2,7 +2,7 @@
 <div class="ucenter-header">
 	<el-space  class="uinfo" alignment="center">
 		<el-avatar :size="120"  alt="$_G['username']">
-			{eval echo avatar_block($_G[uid]);}
+			{eval echo avatar_block($_G['uid']);}
 		</el-avatar>
 		<div class="utitle">
 			<div><el-text size="large" tag="b">$_G['username']</el-text></div>
@@ -22,7 +22,7 @@
 		@select="handleSelectUserCenterMenu"
 	  >
 		<template  v-for="(item,index) in UcenterNavigations">
-		<el-menu-item  :Index="item.id" :path="item.url">{{item.name}}</el-menu-item>
+		<el-menu-item  :index="item.id" :path="item.url">{{item.name}}</el-menu-item>
 		</template>
 	  </el-menu>
 	</div>
