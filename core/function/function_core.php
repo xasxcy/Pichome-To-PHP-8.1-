@@ -332,9 +332,20 @@ function getuserbyuid($uid, $fetch_archive = 0)
 
 function chk_submitroule($type)
 {
-
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_GET['formhash']) && $_GET['formhash'] == formhash() && empty($_SERVER['HTTP_X_FLASH_VERSION']) && (empty($_SERVER['HTTP_REFERER']) ||
-            preg_replace("/https?:\/\/([^\:\/]+).*/i", "\\1", $_SERVER['HTTP_REFERER']) == preg_replace("/([^\:]+).*/", "\\1", $_SERVER['HTTP_HOST']))) {
+    $formhash = isset($_GET['formhash']) ? $_GET['formhash'] : (isset($_POST['formhash']) ? $_POST['formhash'] : '');
+    $refererHost = '';
+    $httpHost = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
+    if (!empty($_SERVER['HTTP_REFERER'])) {
+        $refererHost = preg_replace("/https?:\/\/([^\:\/]+).*/i", "\\1", $_SERVER['HTTP_REFERER']);
+    }
+    $currentHost = preg_replace("/([^\:]+).*/", "\\1", $httpHost);
+    if (
+        $_SERVER['REQUEST_METHOD'] == 'POST'
+        && !empty($formhash)
+        && $formhash == formhash()
+        && empty($_SERVER['HTTP_X_FLASH_VERSION'])
+        && (empty($_SERVER['HTTP_REFERER']) || $refererHost == $currentHost)
+    ) {
 
     } else {
         showTips(array('error' => '提交方式不合法', 'error_code' => 403), $type, 'common/illegal_operation');
@@ -1415,7 +1426,8 @@ function output()
         $_G['gzipcompress'] ? ob_start('ob_gzhandler') : ob_start();
         echo $content;
     }
-    if (defined('DZZ_DEBUG') && DZZ_DEBUG && @include(libfile('function/debug'))) {
+    $debugFile = libfile('function/debug');
+    if (defined('DZZ_DEBUG') && DZZ_DEBUG && $debugFile && @include($debugFile)) {
         function_exists('debugmessage') && debugmessage();
     }
 }
