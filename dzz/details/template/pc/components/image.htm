@@ -18,12 +18,13 @@
 	</template>
 	<template v-else>
 		<div class="el-carousel" style="position: relative;flex: 1;overflow: hidden;">
-				<el-scrollbar class="page-component__scroll" id="ImgScroll" ref="scrollImg" @mousedown.native="imageDrag">
+				<el-scrollbar class="page-component__scroll" id="ImgScroll" ref="scrollImg">
 					<img
 						@load="imageload"
 						@error="imageerror"
 						:src="ImageDisplaySrc"
-						class="image-viewer__img max" />
+						class="image-viewer__img max"
+						style="display:block;max-width:100%;max-height:100%;width:auto;height:auto;margin:auto;object-fit:contain;" />
 				</el-scrollbar>
 			<template v-if="previews.data.length">
 				<el-button 
@@ -169,11 +170,14 @@
 					}
 				},
 				imageDrag(e){//图片移动
-				var self = this;
-				e.preventDefault();
-				var oDiv = document.getElementById('ImgScroll');
+					var self = this;
+					e.preventDefault();
+					var oDiv = document.getElementById('ImgScroll');
 					var oImg = document.querySelector('.image-viewer__img.max');
-				var wrap = oDiv.querySelector('.el-scrollbar__wrap');
+					if(!oDiv || !oImg){
+						return false;
+					}
+					var wrap = oDiv.querySelector('.el-scrollbar__wrap');
 				e = e ? e : window.event;
 				oDiv.classList.add = 'activemove';
 				var lastClientX = e.clientX;
@@ -222,11 +226,11 @@
 				};
 				
 			},
-			imageSet(){
-				var self = this;
-				let imagewidth = 0;
-				let imageheight = 0;
-				this.getImageSizeByUrl( function(param){
+				imageSet(){
+					var self = this;
+					let imagewidth = 0;
+					let imageheight = 0;
+					this.getImageSizeByUrl( function(param){
 					let imageswidth = param.width;
 					let imagesheight = param.height;
 					if(imageswidth == 0 && imagesheight == 0){
@@ -235,9 +239,14 @@
 					}
 					self.imagesSize.width = imageswidth;
 					self.imagesSize.height = imagesheight;
-					var Bw = document.getElementById('ImgScroll').clientWidth;
-					var Bh = document.getElementById('ImgScroll').clientHeight;
-					var slider = document.querySelector('.el-slider').clientWidth;
+						var ImgScroll = document.getElementById('ImgScroll');
+						var sliderEl = document.querySelector('.el-slider');
+						if(!ImgScroll || !sliderEl){
+							return;
+						}
+						var Bw = ImgScroll.clientWidth;
+						var Bh = ImgScroll.clientHeight;
+						var slider = sliderEl.clientWidth;
 					var Lw = 0;
 					var Lh = 0;
 					var proportion = 0;
@@ -268,13 +277,17 @@
 				});
 				
 			},
-			previewClick(index){
-				let self = this;
-				if(this.previews.active == index || this.previews.data.length <= index || index <= -1)return false;
-				this.previews.active = index;
-				this.imagesData.originalimg = this.previews.data[index].lpath;
-				
-			},
+				previewClick(index){
+					let self = this;
+					if(this.previews.active == index || this.previews.data.length <= index || index <= -1)return false;
+					this.previews.active = index;
+					this.imagesData.originalimg = this.previews.data[index].lpath;
+					this.ImageDisplaySrc = this.imagesData.originalimg || this.imagesData.icondata || '';
+					this.$nextTick(() => {
+						this.imageSet();
+					});
+					
+				},
 			previewPosition(){
 				let self = this;
 				if(!self.previews.size)return false;
