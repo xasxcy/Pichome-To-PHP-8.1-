@@ -71,6 +71,7 @@
 				HideInformation: false,
 				IsFullScreen:false,
 				imagesData: {},
+				ImageDisplaySrc:'',
 				currentData:[],
 				paths:[],
 				selectindex:0,
@@ -140,15 +141,20 @@
 				deep:true,
 				immediate:true
 			},
-			imagesData:{
-				handler(dasta){
-					var self = this;
-					self.$nextTick(function(){
-						if(!dasta.iniframe){
-							self.imageSet();
-						}
-					});
-				},
+				imagesData:{
+					handler(dasta){
+						var self = this;
+						self.$nextTick(function(){
+							if(!dasta.iniframe){
+								if(self.imagesData.originalimg){
+									self.ImageDisplaySrc = self.imagesData.originalimg;
+								}else{
+									self.ImageDisplaySrc = self.imagesData.icondata || '';
+								}
+								self.imageSet();
+							}
+						});
+					},
 				deep:true,
 			},
 			'ImgParam.iswait':{

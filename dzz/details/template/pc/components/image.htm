@@ -21,7 +21,8 @@
 				<el-scrollbar class="page-component__scroll" id="ImgScroll" ref="scrollImg" @mousedown.native="imageDrag">
 					<img
 						@load="imageload"
-						:src="imagesData.originalimg?imagesData.originalimg:imagesData.icondata"
+						@error="imageerror"
+						:src="ImageDisplaySrc"
 						class="image-viewer__img max" />
 				</el-scrollbar>
 			<template v-if="previews.data.length">
@@ -141,7 +142,7 @@
 					self.imageSize(val);
 				});
 			},
-			imageTransform(){
+				imageTransform(){
 				var self = this;
 				var str = '';
 				if(self.ImgParam.rotate != 0){
@@ -157,8 +158,17 @@
 					if(img){
 						img.style.transform = str;
 					}
-			},
-			imageDrag(e){//图片移动
+				},
+				imageerror(){
+					// Fallback to thumb url when original image fails to load.
+					if(this.imagesData && this.imagesData.icondata && this.ImageDisplaySrc !== this.imagesData.icondata){
+						this.ImageDisplaySrc = this.imagesData.icondata;
+						this.$nextTick(() => {
+							this.imageSet();
+						});
+					}
+				},
+				imageDrag(e){//图片移动
 				var self = this;
 				e.preventDefault();
 				var oDiv = document.getElementById('ImgScroll');
@@ -195,9 +205,9 @@
 			imageload(){
 					return true;
 			},
-			async getImageSizeByUrl(callback){
-				let image = new Image();
-				image.src = this.imagesData.originalimg;
+				async getImageSizeByUrl(callback){
+					let image = new Image();
+					image.src = this.ImageDisplaySrc || this.imagesData.originalimg || this.imagesData.icondata || '';
 				image.onload = await function () {
 					callback({
 						width: image.width,
