@@ -1062,7 +1062,7 @@ function lang($langvar = null, $vars = array(), $default = null, $curpath = '')
 
         foreach ($vars as $k => $v) {
             $searchs[] = '{' . $k . '}';
-            $replaces[] = $v;
+            $replaces[] = is_scalar($v) || $v === null ? (string)$v : json_encode($v, JSON_UNESCAPED_UNICODE);
         }
     }
 
@@ -1071,10 +1071,13 @@ function lang($langvar = null, $vars = array(), $default = null, $curpath = '')
         foreach ($gvar[0] as $k => $v) {
 
             $searchs[] = $v;
-            $replaces[] = getglobal($gvar[1][$k]);
+            $gv = getglobal($gvar[1][$k]);
+            $replaces[] = is_scalar($gv) || $gv === null ? (string)$gv : json_encode($gv, JSON_UNESCAPED_UNICODE);
         }
     }
-    $return = str_replace($searchs, $replaces, $return);
+    if (is_string($return) && ($searchs || $replaces)) {
+        $return = str_replace($searchs, $replaces, $return);
+    }
     return $return;
 }
 

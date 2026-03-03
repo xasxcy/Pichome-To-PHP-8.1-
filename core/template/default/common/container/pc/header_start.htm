@@ -22,9 +22,9 @@
 		
 		<script type="text/javascript" src="static/element/Element-Plus/ElementPlus.min.js?{VERHASH}"></script>
 		<script type="text/javascript" src="static/element/Element-Plus/zhCn.js?{VERHASH}"></script>
-		<!--{if $_G['language_list'][$_G['language']] && ($elementflag=$_G['language_list'][$_G['language']]['elementflag'])}-->
-		<script type="text/javascript" src="static/element/Element-Plus/locale/{$elementflag}.js?{VERHASH}"></script>
-		<!--{/if}-->
+			<!--{if !empty($_G['language_list'][$_G['language']]['elementflag'])}-->
+			<script type="text/javascript" src="static/element/Element-Plus/locale/{$_G['language_list'][$_G['language']]['elementflag']}.js?{VERHASH}"></script>
+			<!--{/if}-->
 		<script type="text/javascript" src="static/js/qs.min.js?{VERHASH}"></script>
 		
 		<script type="text/javascript" src="static/element/Element-Plus/index.iife.min.js?{VERHASH}"></script>
@@ -57,4 +57,3 @@
 				return response
 			});
 		</script>
-

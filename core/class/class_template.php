@@ -327,14 +327,17 @@ class template {
 	 	return $jsonencode;
 	}
 
-	function loadjstemplate($matches) {
+		function loadjstemplate($matches) {
         global $_G;
         $parameter = $matches[1];
 		$paramet = trim($parameter,"\0");
-        $parameter = preg_replace_callback('/\{(.+?)\}/i',function($m){
-            $defineds = get_defined_constants();
-            return $defineds[$m[1]];
-        },$paramet);
+	        $parameter = preg_replace_callback('/\{(.+?)\}/i',function($m){
+	            $defineds = get_defined_constants();
+                if (isset($defineds[$m[1]])) {
+	                return $defineds[$m[1]];
+                }
+                return $m[0];
+	        },$paramet);
 
 		$src =DZZ_ROOT.'/' . $parameter;
 		$src = preg_replace('/\?.*/i', '', $src);

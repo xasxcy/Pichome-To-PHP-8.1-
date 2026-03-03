@@ -391,6 +391,9 @@ class table_pichome_banner extends dzz_table
 
         }
         else{
+            if (empty($topbannerids)) {
+                return ['bannerlist' => $result, 'tilebanner' => $bannerl];
+            }
             $pid = $topbannerids[0];
             if(in_array($pid,$showchildrenbannerids)){
                 if($bannerlist[$pid]['btype'] == 0){
