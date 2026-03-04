@@ -33,7 +33,7 @@
 		</el-header>
 		<el-main>
 			<div class="page-content" v-loading="HtmlLoading" style="display: flex;flex-direction: column;height: 100%;overflow: hidden;">
-				<div class="details-top" v-if="!HtmlLoading" style="padding:0;">
+					<div class="details-top" style="padding:0;">
 					<div class="details-maincontainer">
 						<div class="floating-layer clearfix" :class="HideInformation?'HideInformation':''"  v-cloak>
 							<!--{template pc/components/image}-->
@@ -49,6 +49,25 @@
 </div>
 
 <script type="text/javascript">
+	(function(){
+		var box = document.createElement('div');
+		box.id = 'details-init-debug';
+		box.style.cssText = 'position:fixed;right:12px;top:12px;z-index:100001;background:#111;color:#0f0;padding:6px 10px;border-radius:6px;font-size:12px;max-width:44vw;word-break:break-all;line-height:1.4;';
+		box.textContent = 'DETAILS_BOOT';
+		document.addEventListener('DOMContentLoaded', function(){
+			document.body.appendChild(box);
+		});
+		window.addEventListener('error', function(e){
+			var msg = (e && e.message) ? e.message : 'unknown';
+			box.textContent = 'DETAILS_JS_ERROR: ' + msg;
+		});
+		window.addEventListener('unhandledrejection', function(e){
+			var reason = e && e.reason ? (e.reason.message || String(e.reason)) : 'unknown';
+			box.textContent = 'DETAILS_PROMISE_ERROR: ' + reason;
+		});
+		window.__detailsDebugBox = box;
+	})();
+
 	const { createApp, reactive, toRefs, toRef, ref, onMounted, nextTick, watch, computed, onBeforeUpdate } = Vue;
 	const dzzoffice_details = createApp({
 		el: '#dzzoffice',
@@ -67,11 +86,10 @@
 				DocumentBack:true,
 				DocumentRefresh:1,
 				DocumentHref:'',
-				DocumentAdminId:"$_G['adminid']",
+				DocumentAdminId:'$_G[adminid]',
 				HideInformation: false,
 				IsFullScreen:false,
 				imagesData: {},
-				ImageDisplaySrc:'',
 				currentData:[],
 				paths:[],
 				selectindex:0,
@@ -141,20 +159,15 @@
 				deep:true,
 				immediate:true
 			},
-				imagesData:{
-					handler(dasta){
-						var self = this;
-						self.$nextTick(function(){
-							if(!dasta.iniframe){
-								if(self.imagesData.originalimg){
-									self.ImageDisplaySrc = self.imagesData.originalimg;
-								}else{
-									self.ImageDisplaySrc = self.imagesData.icondata || '';
-								}
-								self.imageSet();
-							}
-						});
-					},
+			imagesData:{
+				handler(dasta){
+					var self = this;
+					self.$nextTick(function(){
+						if(!dasta.iniframe){
+							self.imageSet();
+						}
+					});
+				},
 				deep:true,
 			},
 			'ImgParam.iswait':{
@@ -197,11 +210,10 @@
 			let url = sessionStorage.getItem('href');
 			this.DocumentHref = url;
 
-			var arr = (location.hash || "").replace(/^\?/,'').split("&");
-			if(arr.length){
-				path=arr[0].replace("#","").split('=')[1];
-				this.path = path;
-			}
+				var path = this.parseHashPath();
+				if(path){
+					this.path = path;
+				}
 			if(!this.path){
 				var storpath = sessionStorage.getItem('detailpath');
 				if(storpath){
@@ -235,8 +247,20 @@
 		},
 		
 		
-		methods: {
-			DocumentThemeChange(){
+			methods: {
+				parseHashPath(){
+					var hash = (window.location.hash || "").replace(/^#/, "");
+					if(!hash) return "";
+					var query = hash.split("&");
+					for(var i = 0; i < query.length; i++){
+						var kv = query[i].split("=");
+						if(kv[0] === "path"){
+							return decodeURIComponent(kv.slice(1).join("=") || "");
+						}
+					}
+					return "";
+				},
+				DocumentThemeChange(){
 				if(this.DocumentThemeColor=='light'){
 					this.DocumentThemeColor='dark';
 					localStorage.setItem('theme','dark');
@@ -274,8 +298,9 @@
 						return false;
 					}
 					var json = res.data;
-					if(json.error){
-						self.$confirm(json.error, '{lang prompt}', {
+						if(json.error){
+							self.HtmlLoading = false;
+							self.$confirm(json.error, '{lang prompt}', {
 							closeOnPressEscape:false,
 							confirmButtonText: '{lang sure}',
 							showCancelButton:false,
@@ -365,9 +390,11 @@
 					self.$nextTick(function () {
 						self.previewSize()
 					});
-				}).catch(function (error) {
-				    console.log(error);
-				});
+					}).catch(function (error) {
+						console.log(error);
+						self.HtmlLoading = false;
+						self.$message.error('{lang page_error}');
+					});
 			},
 			async GetDatafilelist(param1,param2){
 				var self = this;
@@ -457,14 +484,13 @@
 			});
 			try{window.parent.document.querySelector('.Details-Iframe-wrapper').lastChild.style.opacity  = "1";}catch(e){}
 			<!--{else}-->
-			window.onhashchange = function(){
-				if(self.DocumentBack){
-					var arr = (location.hash || "").replace(/^\?/,'').split("&");
-					if(arr.length){
-						path=arr[0].replace("#","").split('=')[1];
-						var index = self.paths.indexOf(path);
-						sessionStorage.setItem('selectindex',index);
-					}
+				window.onhashchange = function(){
+					if(self.DocumentBack){
+						var path = self.parseHashPath();
+						if(path){
+							var index = self.paths.indexOf(path);
+							sessionStorage.setItem('selectindex',index);
+						}
 					document.location.reload();
 					return false;
 				}
@@ -481,11 +507,8 @@
 		},
 
 	});
-		dzzoffice_details.use(ElementPlus, {
-			<!--{if $_G['language']=='zh-CN' && !empty($_G['language_list'][$_G['language']]['elementflagCamel'])}-->
-			locale: {$_G['language_list'][$_G['language']]['elementflagCamel']},
-			<!--{/if}-->
-		});
+	var detailsElementLocale = (typeof ElementPlusLocaleZhCn !== 'undefined') ? ElementPlusLocaleZhCn : undefined;
+	dzzoffice_details.use(ElementPlus, detailsElementLocale ? { locale: detailsElementLocale } : {});
 	for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 		dzzoffice_details.component(key, component)
 	}
@@ -495,6 +518,9 @@
 	// 屏蔽警告信息
 	dzzoffice_details.config.warnHandler = function(){return null};
 	dzzoffice_details.mount('#dzzoffice');
+	if(window.__detailsDebugBox){
+		window.__detailsDebugBox.textContent = 'DETAILS_MOUNT_OK';
+	}
 
 </script>
 

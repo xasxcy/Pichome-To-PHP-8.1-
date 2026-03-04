@@ -1182,6 +1182,7 @@ where r.isdelete = 0 and r.appid = %s order by r.dateline desc ", ['pichome_reso
     }
 
     $datas = [];
+    $valid_dir = 0;
     if (!$path && $gettype) {
         $path = (PHP_OS == 'Linux') ? '/' : '';
         if ($path == '') {
@@ -1215,6 +1216,7 @@ where r.isdelete = 0 and r.appid = %s order by r.dateline desc ", ['pichome_reso
         $datas[] = ['path' => DZZ_ROOT . 'library', 'charset' => CHARSET, 'type' => 1];
     } else {
         if (is_dir($path)) {
+            $valid_dir = 1;
             if ($dh = @opendir($path)) {
                 while (($file = readdir($dh)) !== false) {
                     if ($file != '.' && $file != '..' && is_dir($path . BS . $file) && !preg_match('/^(' . $notallowdir . ')$/i', $file)) {
@@ -1257,7 +1259,7 @@ where r.isdelete = 0 and r.appid = %s order by r.dateline desc ", ['pichome_reso
         }
 
     }
-    exit(json_encode(array('data' => $datas)));
+    exit(json_encode(array('data' => $datas, 'valid_dir' => $valid_dir)));
 } elseif ($operation == 'sort') {
     $appids = isset($_GET['appids']) ? trim($_GET['appids']) : '';
     if (submitcheck('settingsubmit')) {

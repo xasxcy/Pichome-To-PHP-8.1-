@@ -114,7 +114,7 @@ class table_thumb_cache extends dzz_table
         return $data;
     }
 
-    public function fetch_all($aids)
+    public function fetch_all($aids, $force_from_db = false)
     {
         $rdata = [];
         if (!is_array($aids)) $aids = (array)$aids;

@@ -238,7 +238,7 @@
 				      if(typeof window.ActiveXObject != "undefined") { 
 				          wscript = new ActiveXObject("WScript.Shell"); 
 				          if(wscript) { 
-				              wscript.SendKeys("{F11}"); 
+				              wscript.SendKeys("{" + "F11}"); 
 				          } 
 				      } 
 			},
@@ -255,7 +255,7 @@
 				      if (typeof window.ActiveXObject != "undefined") { 
 				          wscript = new ActiveXObject("WScript.Shell"); 
 				          if (wscript != null) { 
-				              wscript.SendKeys("{F11}"); 
+				              wscript.SendKeys("{" + "F11}"); 
 				          } 
 				    } 
 			},

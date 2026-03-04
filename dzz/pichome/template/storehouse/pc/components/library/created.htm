@@ -221,7 +221,7 @@
 				}
 				if(self.Catalogue.searchStatus){
 					resolve(fdata);
-					if(fdata.length){
+					if(fdata.length || data.valid_dir){
 						self.Catalogue.showVal = self.Catalogue.search;
 					}
 				}else{

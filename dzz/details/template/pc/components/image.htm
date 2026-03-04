@@ -18,14 +18,16 @@
 	</template>
 	<template v-else>
 		<div class="el-carousel" style="position: relative;flex: 1;overflow: hidden;">
-				<el-scrollbar class="page-component__scroll" id="ImgScroll" ref="scrollImg">
-					<img
-						@load="imageload"
-						@error="imageerror"
-						:src="ImageDisplaySrc"
-						class="image-viewer__img max"
-						style="display:block;max-width:100%;max-height:100%;width:auto;height:auto;margin:auto;object-fit:contain;" />
-				</el-scrollbar>
+			<el-scrollbar class="page-component__scroll" id="ImgScroll" ref="scrollImg" @mousedown.native="imageDrag">
+				<img
+					:src="imagesData.icondata"
+					class="image-viewer__img thumbnail" />
+				<img
+					@load="imageload"
+					:src="imagesData.originalimg?imagesData.originalimg:imagesData.icondata"
+					class="image-viewer__img max opacity" />
+				
+			</el-scrollbar>
 			<template v-if="previews.data.length">
 				<el-button 
 					v-if="previews.active > 0"
@@ -89,10 +91,7 @@
 				// 	return false;
 				// }
 				var ImgScroll = document.getElementById('ImgScroll');
-					var img = document.querySelector('.image-viewer__img.max');
-					if(!img || !ImgScroll){
-						return;
-					}
+				var img = document.querySelector('.image-viewer__img');
 				var wrap = document.querySelector('#ImgScroll .el-scrollbar__wrap');
 				var canva = document.querySelector('#ImgScroll .el-scrollbar__view');
 				if(this.imagesData.opentype == 'other'){
@@ -144,8 +143,8 @@
 				});
 			},
 				imageTransform(){
-				var self = this;
-				var str = '';
+					var self = this;
+					var str = '';
 				if(self.ImgParam.rotate != 0){
 					str += ' rotate('+self.ImgParam.rotate+'deg)';
 				}
@@ -155,29 +154,17 @@
 				if(self.ImgParam.scaleY != 0){
 					str += ' scaleY('+self.ImgParam.scaleY+')';
 				}
-					var img = document.querySelector('.image-viewer__img.max');
-					if(img){
-						img.style.transform = str;
+					var imgNode = document.querySelector('.image-viewer__img');
+					if(imgNode){
+						imgNode.style.transform = str;
 					}
 				},
-				imageerror(){
-					// Fallback to thumb url when original image fails to load.
-					if(this.imagesData && this.imagesData.icondata && this.ImageDisplaySrc !== this.imagesData.icondata){
-						this.ImageDisplaySrc = this.imagesData.icondata;
-						this.$nextTick(() => {
-							this.imageSet();
-						});
-					}
-				},
-				imageDrag(e){//图片移动
-					var self = this;
-					e.preventDefault();
-					var oDiv = document.getElementById('ImgScroll');
-					var oImg = document.querySelector('.image-viewer__img.max');
-					if(!oDiv || !oImg){
-						return false;
-					}
-					var wrap = oDiv.querySelector('.el-scrollbar__wrap');
+			imageDrag(e){//图片移动
+				var self = this;
+				e.preventDefault();
+				var oDiv = document.getElementById('ImgScroll');
+				var oImg = document.querySelector('.image-viewer__img');
+				var wrap = oDiv.querySelector('.el-scrollbar__wrap');
 				e = e ? e : window.event;
 				oDiv.classList.add = 'activemove';
 				var lastClientX = e.clientX;
@@ -206,12 +193,25 @@
 
 				
 			},
-			imageload(){
-					return true;
+				imageload(){
+					var thumb = document.querySelector('.image-viewer__img.thumbnail');
+					if(thumb && thumb.parentNode){
+						thumb.parentNode.removeChild(thumb);
+					}
+					var maximg = document.querySelector('.image-viewer__img.max');
+					if(maximg){
+						maximg.classList.remove('opacity');
+					}
+
+
+				// let img = document.querySelector('.image-viewer__img.max');
+				// if(img){
+				// 	img.classList.remove('opacity');
+				// }
 			},
-				async getImageSizeByUrl(callback){
-					let image = new Image();
-					image.src = this.ImageDisplaySrc || this.imagesData.originalimg || this.imagesData.icondata || '';
+			async getImageSizeByUrl(callback){
+				let image = new Image();
+				image.src = this.imagesData.originalimg;
 				image.onload = await function () {
 					callback({
 						width: image.width,
@@ -230,7 +230,7 @@
 					var self = this;
 					let imagewidth = 0;
 					let imageheight = 0;
-					this.getImageSizeByUrl( function(param){
+				this.getImageSizeByUrl( function(param){
 					let imageswidth = param.width;
 					let imagesheight = param.height;
 					if(imageswidth == 0 && imagesheight == 0){
@@ -239,13 +239,13 @@
 					}
 					self.imagesSize.width = imageswidth;
 					self.imagesSize.height = imagesheight;
-						var ImgScroll = document.getElementById('ImgScroll');
+						var imgScrollEl = document.getElementById('ImgScroll');
 						var sliderEl = document.querySelector('.el-slider');
-						if(!ImgScroll || !sliderEl){
+						if(!imgScrollEl || !sliderEl){
 							return;
 						}
-						var Bw = ImgScroll.clientWidth;
-						var Bh = ImgScroll.clientHeight;
+						var Bw = imgScrollEl.clientWidth;
+						var Bh = imgScrollEl.clientHeight;
 						var slider = sliderEl.clientWidth;
 					var Lw = 0;
 					var Lh = 0;
@@ -277,17 +277,13 @@
 				});
 				
 			},
-				previewClick(index){
-					let self = this;
-					if(this.previews.active == index || this.previews.data.length <= index || index <= -1)return false;
-					this.previews.active = index;
-					this.imagesData.originalimg = this.previews.data[index].lpath;
-					this.ImageDisplaySrc = this.imagesData.originalimg || this.imagesData.icondata || '';
-					this.$nextTick(() => {
-						this.imageSet();
-					});
-					
-				},
+			previewClick(index){
+				let self = this;
+				if(this.previews.active == index || this.previews.data.length <= index || index <= -1)return false;
+				this.previews.active = index;
+				this.imagesData.originalimg = this.previews.data[index].lpath;
+				
+			},
 			previewPosition(){
 				let self = this;
 				if(!self.previews.size)return false;

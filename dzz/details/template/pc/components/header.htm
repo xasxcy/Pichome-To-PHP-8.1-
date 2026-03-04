@@ -7,11 +7,11 @@
 				<el-icon  class="icon"><Close /></el-icon>
 			</el-button>
 			<!--{else}-->
-				<a href="{$_G['siteurl']}" style="width: 100%;position: relative;padding-left: 41px;text-decoration: none;">
+			<a href="{$_G[siteurl]}" style="width: 100%;position: relative;padding-left: 41px;text-decoration: none;">
 				<el-image src="data/attachment/sitelogo/sitelogo.png?{VERHASH}" fit="contain">
 					<template #error><div class="el-image__placeholder"></div></template>
 				</el-image>
-					<span class="text">{$_G['setting']['sitename']}</span>
+				<span class="text">{$_G['setting']['sitename']}</span>
 			</a>
 			<!--{/if}-->
 		</div>
@@ -127,7 +127,7 @@
 					version="$_G['setting']['version']"
 					formhash="{FORMHASH}">
 					<el-avatar size="40">
-						{eval echo avatar_block($_G["uid"]);}
+							{eval echo avatar_block($_G['uid']);}
 					</el-avatar>
 				</comavatar>
 			<!--{/if}-->
@@ -307,7 +307,7 @@
 				      if(typeof window.ActiveXObject != "undefined") { 
 				          wscript = new ActiveXObject("WScript.Shell"); 
 				          if(wscript) { 
-				              wscript.SendKeys("{F11}"); 
+				              wscript.SendKeys("{" + "F11}"); 
 				          } 
 				      } 
 			},
@@ -323,7 +323,7 @@
 				      if (typeof window.ActiveXObject != "undefined") { 
 				          wscript = new ActiveXObject("WScript.Shell"); 
 				          if (wscript != null) { 
-				              wscript.SendKeys("{F11}"); 
+				              wscript.SendKeys("{" + "F11}"); 
 				          } 
 				    } 
 			},

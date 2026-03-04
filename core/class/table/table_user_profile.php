@@ -140,7 +140,7 @@ class table_user_profile extends dzz_table
         $uids=(array)$uids;
         return DB::delete($this->_table,"uid IN (".dimplode($uids).")");
     }
-    public function fetch_all($uids) {
+    public function fetch_all($uids, $force_from_db = false) {
         $data = array();
         $uids=(array)$uids;
         if(!empty($uids)) {

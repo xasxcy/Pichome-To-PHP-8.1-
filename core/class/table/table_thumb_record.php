@@ -65,7 +65,7 @@
             return $data;
         }
         
-        public function fetch_all($ids)
+        public function fetch_all($ids, $force_from_db = false)
         {
             $rdata = [];
             if (!is_array($ids)) $ids = (array)$ids;
